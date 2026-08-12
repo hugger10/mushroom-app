@@ -33,6 +33,8 @@ target 'Mesh' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'react-native-ios-utilities', :path => '../node_modules/react-native-ios-utilities'
+
   post_install do |installer|
     react_native_post_install(
       installer,
