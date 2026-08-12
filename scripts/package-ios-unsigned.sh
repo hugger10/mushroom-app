@@ -3,9 +3,10 @@
 # that can be signed locally on Windows with Sideloadly.
 set -euo pipefail
 
-IOS_DIR="apps/mobile/ios"
-APP_PATH="$IOS_DIR/build/Build/Products/Release-iphoneos/Mesh.app"
-IPA_PATH="$IOS_DIR/build/Mesh-unsigned.ipa"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+APP_PATH="$REPO_ROOT/apps/mobile/ios/build/Build/Products/Release-iphoneos/Mesh.app"
+IPA_PATH="$REPO_ROOT/apps/mobile/ios/build/Mesh-unsigned.ipa"
 
 if [[ ! -d "$APP_PATH" ]]; then
   echo "error: .app bundle not found at $APP_PATH" >&2
