@@ -34,6 +34,8 @@ target 'Mesh' do
   )
 
   pod 'react-native-ios-utilities', :git => 'https://github.com/dominicstop/react-native-ios-utilities.git', :tag => 'v5.2.0'
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
 
   post_install do |installer|
     react_native_post_install(
