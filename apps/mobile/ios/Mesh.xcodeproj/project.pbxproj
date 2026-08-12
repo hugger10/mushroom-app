@@ -17,8 +17,6 @@
 		4F98E3011CC000000000000C /* call_rejected.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4F98E3011CC000000000000D /* call_rejected.wav */; };
 		4F98E3011CC000000000000E /* call_timeout.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4F98E3011CC000000000000F /* call_timeout.wav */; };
 		4F98E3021CC0000000000001 /* record_cancel.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4F98E3021CC0000000000002 /* record_cancel.wav */; };
-		6A7D0011B4A3111100D1F001 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A7D0010B4A3111100D1F001 /* FontAwesome.ttf */; };
-		6A7D0013B4A3111100D1F001 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A7D0012B4A3111100D1F001 /* Ionicons.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		7A1780ED2CA45674006654E1 /* VoipPushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1780EC2CA45674006654E1 /* VoipPushManager.swift */; };
 		7A1780ED2CA45674006654E2 /* VoipPushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A1780EC2CA45674006654E2 /* VoipPushManager.m */; };
@@ -49,8 +47,6 @@
 		3B4392A12AC88292D35C810B /* Pods-Mesh.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mesh.debug.xcconfig"; path = "Target Support Files/Pods-Mesh/Pods-Mesh.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Mesh.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mesh.release.xcconfig"; path = "Target Support Files/Pods-Mesh/Pods-Mesh.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Mesh.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Mesh.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6A7D0010B4A3111100D1F001 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = Mesh/Fonts/FontAwesome.ttf; sourceTree = "<group>"; };
-		6A7D0012B4A3111100D1F001 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Ionicons.ttf; path = Mesh/Fonts/Ionicons.ttf; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Mesh/AppDelegate.swift; sourceTree = "<group>"; };
 		7A1780EC2CA45674006654E1 /* VoipPushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VoipPushManager.swift; path = Mesh/VoipPushManager.swift; sourceTree = "<group>"; };
 		7A1780EC2CA45674006654E2 /* VoipPushManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = VoipPushManager.m; path = Mesh/VoipPushManager.m; sourceTree = "<group>"; };
@@ -122,7 +118,6 @@
 				4F98E3011CC0000000000003 /* CallSounds */,
 				4F98E3021CC0000000000003 /* RecordingSounds */,
 				AA1780ED2CA45674006654F9 /* Sounds */,
-				6A7D0014B4A3111100D1F001 /* Fonts */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				7A1780EC2CA45674006654E1 /* VoipPushManager.swift */,
 				7A1780EC2CA45674006654E2 /* VoipPushManager.m */,
@@ -169,16 +164,6 @@
 			);
 			name = RecordingSounds;
 			path = Mesh/RecordingSounds;
-			sourceTree = "<group>";
-		};
-		6A7D0014B4A3111100D1F001 /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				6A7D0010B4A3111100D1F001 /* FontAwesome.ttf */,
-				6A7D0012B4A3111100D1F001 /* Ionicons.ttf */,
-			);
-			name = Fonts;
-			path = Mesh/Fonts;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -330,8 +315,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A7D0011B4A3111100D1F001 /* FontAwesome.ttf in Resources */,
-				6A7D0013B4A3111100D1F001 /* Ionicons.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				4F98E3011CC000000000000A /* call_busy.wav in Resources */,
 				4F98E3011CC0000000000006 /* call_connected.wav in Resources */,
