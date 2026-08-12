@@ -1,5 +1,5 @@
 diff --git a/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift b/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift
-index 09be306d5aa39337c5114c2ad6ba7513218e0751..346f976aebfe4b9f7b744cff13d8b71680b8f63a 100644
+index 09be306d5aa39337c5114c2ad6ba7513218e0751..a4f8dde7d2ecaa0ac309d2c442f61cd0bcae6e92 100644
 --- a/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift
 +++ b/ios/Sources/Extensions+Helpers/RCTView+Helpers.swift
 @@ -25,15 +25,20 @@ public extension RCTView {
@@ -11,7 +11,7 @@ index 09be306d5aa39337c5114c2ad6ba7513218e0751..346f976aebfe4b9f7b744cff13d8b716
 -  
 -    if let match = self.recursivelyFindParentView(whereType: targetType) {
 -      return match;
-+  var closestParentReactContentView: UIView? {
++  var closestParentReactContentView: RCTView? {
 +    guard let targetType = NSClassFromString("RCTRootContentView") else {
 +      return nil;
      };
@@ -22,7 +22,7 @@ index 09be306d5aa39337c5114c2ad6ba7513218e0751..346f976aebfe4b9f7b744cff13d8b716
 +    var currentView: UIView? = self;
 +    while let view = currentView {
 +      if view.isKind(of: targetType) {
-+        return view;
++        return view as? RCTView;
 +      };
 +      currentView = view.superview;
 +    };
