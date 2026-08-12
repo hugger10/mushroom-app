@@ -14,14 +14,17 @@ class NotificationService: UNNotificationServiceExtension {
     _ request: UNNotificationRequest,
     withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void
   ) {
-    var content = request.content
+    guard let content = request.content.mutableCopy() as? UNMutableNotificationContent else {
+      contentHandler(request.content)
+      return
+    }
 
     if let sound = readSharedSound() {
       switch sound {
       case "silent":
         content.sound = nil
       case "default":
-        content.sound = UNNotificationSound.defaultSound
+        content.sound = UNNotificationSound.default
       default:
         // File name (e.g. currentAlert.wav) resolved from the main app
         // container Library/Sounds/ — element-x production verifies this chain.
