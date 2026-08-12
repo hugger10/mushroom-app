@@ -91,6 +91,9 @@
     "onlyBuiltDependencies": [
       "electron",
       "sharp"
-    ]
+    ],
+    "patchedDependencies": {
+      "react-native-ios-utilities@5.2.0": "patches/react-native-ios-utilities@5.2.0.patch"
+    }
   }
 }
