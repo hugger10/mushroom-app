@@ -32,12 +32,17 @@ jobs:
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build workspace packages
+        run: pnpm --filter @mushroom/shared build
+
       - name: Setup CocoaPods
         run: |
           cd apps/mobile
           bundle install
 
       - name: Install iOS Pods
+        env:
+          GIT_SSL_NO_VERIFY: "true"
         run: |
           cd apps/mobile/ios
           bundle exec pod install
