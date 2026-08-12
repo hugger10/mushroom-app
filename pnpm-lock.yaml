@@ -16,7 +16,7 @@ overrides:
 
 patchedDependencies:
   react-native-ios-utilities@5.2.0:
-    hash: sca2wisstnd5ltihy3zlqm667u
+    hash: vh3me7r3i4vxf4zmz2pdjlzz6e
     path: patches/react-native-ios-utilities@5.2.0.patch
 
 importers:
