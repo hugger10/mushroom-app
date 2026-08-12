@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "paths": {
+      "@mushroom/app-core": ["./packages/app-core/src"],
+      "@mushroom/app-core/*": ["./packages/app-core/src/*"],
+      "@mushroom/shared": ["./packages/shared/src"],
+      "@mushroom/shared/*": ["./packages/shared/src/*"]
+    }
+  }
+}

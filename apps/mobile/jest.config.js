@@ -1,0 +1,79 @@
+module.exports = {
+  preset: "@react-native/jest-preset",
+  moduleNameMapper: {
+    "^react-native-gesture-handler/ReanimatedSwipeable$":
+      "<rootDir>/__tests__/helpers/mock-react-native-gesture-handler-reanimated-swipeable.js",
+    "^react-native-reanimated$":
+      "<rootDir>/__tests__/helpers/mock-react-native-reanimated.js",
+    "^react-native-worklets$":
+      "<rootDir>/__tests__/helpers/mock-react-native-worklets.js",
+    "^react-native-gesture-handler$":
+      "<rootDir>/__tests__/helpers/mock-react-native-gesture-handler.js",
+    "^@react-navigation/native$":
+      "<rootDir>/__tests__/helpers/mock-react-navigation-native.js",
+    "^@react-navigation/native-stack$":
+      "<rootDir>/__tests__/helpers/mock-react-navigation-native-stack.js",
+    "^@react-native-documents/picker$":
+      "<rootDir>/__tests__/helpers/mock-react-native-documents-picker.js",
+    "^react-native-image-picker$":
+      "<rootDir>/__tests__/helpers/mock-react-native-image-picker.js",
+    "^@react-native-firebase/app$":
+      "<rootDir>/__tests__/helpers/mock-react-native-firebase-app.js",
+    "^@react-native-firebase/messaging$":
+      "<rootDir>/__tests__/helpers/mock-react-native-firebase-messaging.js",
+    "^@hmscore/react-native-hms-push$":
+      "<rootDir>/__tests__/helpers/mock-hmscore-react-native-hms-push.js",
+    "^@notifee/react-native$":
+      "<rootDir>/__tests__/helpers/mock-notifee-react-native.js",
+    "^react-native-audio-recorder-player$":
+      "<rootDir>/__tests__/helpers/mock-react-native-audio-recorder-player.js",
+    "^react-native-callkeep$":
+      "<rootDir>/__tests__/helpers/mock-react-native-callkeep.js",
+    "^react-native-permissions$":
+      "<rootDir>/__tests__/helpers/mock-react-native-permissions.js",
+    "^@react-native-camera-roll/camera-roll$":
+      "<rootDir>/__tests__/helpers/mock-react-native-camera-roll.js",
+    "^@react-native-community/netinfo$":
+      "<rootDir>/__tests__/helpers/mock-react-native-netinfo.js",
+    "^react-native-safe-area-context$":
+      "<rootDir>/__tests__/helpers/mock-react-native-safe-area-context.js",
+    "^react-native-create-thumbnail$":
+      "<rootDir>/__tests__/helpers/mock-react-native-create-thumbnail.js",
+    "^react-native-contacts$":
+      "<rootDir>/__tests__/helpers/mock-react-native-contacts.js",
+    "^react-native-mmkv$":
+      "<rootDir>/__tests__/helpers/mock-react-native-mmkv.js",
+    "^react-native-nitro-sqlite$":
+      "<rootDir>/__tests__/helpers/mock-react-native-nitro-sqlite.js",
+    "^react-native-fs$": "<rootDir>/__tests__/helpers/mock-react-native-fs.js",
+    "^react-native-video$":
+      "<rootDir>/__tests__/helpers/mock-react-native-video.js",
+    "^react-native-vision-camera$":
+      "<rootDir>/__tests__/helpers/mock-react-native-vision-camera.js",
+    "^@shopify/flash-list$":
+      "<rootDir>/__tests__/helpers/mock-shopify-flash-list.js",
+    "^@gorhom/bottom-sheet$":
+      "<rootDir>/__tests__/helpers/mock-gorhom-bottom-sheet.js",
+    "^react-native-haptic-feedback$":
+      "<rootDir>/__tests__/helpers/mock-react-native-haptic-feedback.js",
+    "^react-native-config$":
+      "<rootDir>/__tests__/helpers/mock-react-native-config.js",
+    "^react-native-device-info$":
+      "<rootDir>/__tests__/helpers/mock-react-native-device-info.js",
+    "^jpush-react-native$":
+      "<rootDir>/__tests__/helpers/mock-jpush-react-native.js",
+    "^jcore-react-native$":
+      "<rootDir>/__tests__/helpers/mock-jcore-react-native.js",
+    "^react-native-compressor$":
+      "<rootDir>/__tests__/helpers/mock-react-native-compressor.js",
+    "^react-native-share$":
+      "<rootDir>/__tests__/helpers/mock-react-native-share.js",
+    "^react-native-nitro-sqlite/lib/module/nitro\\.js$":
+      "<rootDir>/__tests__/helpers/mock-react-native-nitro-sqlite-nitro.js",
+    "^react-native-nitro-sqlite/lib/module/DatabaseQueue\\.js$":
+      "<rootDir>/__tests__/helpers/mock-react-native-nitro-sqlite-database-queue.js",
+    "\\.svg$": "<rootDir>/__tests__/helpers/mock-static-asset.js",
+    "\\.wav$": "<rootDir>/__tests__/helpers/mock-static-asset.js"
+  },
+  testPathIgnorePatterns: ["/node_modules/", "/__tests__/helpers/"]
+};

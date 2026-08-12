@@ -1,0 +1,68 @@
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-build
+  cancel-in-progress: false
+
+jobs:
+  build-ipa:
+    name: Build unsigned IPA
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup CocoaPods
+        run: |
+          cd apps/mobile
+          bundle install
+
+      - name: Install iOS Pods
+        run: |
+          cd apps/mobile/ios
+          bundle exec pod install
+
+      - name: Prepare env file
+        run: cp apps/mobile/.env.example apps/mobile/.env
+
+      - name: Build app (unsigned)
+        run: |
+          cd apps/mobile/ios
+          xcodebuild -workspace Mesh.xcworkspace \
+            -scheme Mesh \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package unsigned IPA
+        run: bash scripts/package-ios-unsigned.sh
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mesh-unsigned-ipa
+          path: apps/mobile/ios/build/Mesh-unsigned.ipa
+          if-no-files-found: error

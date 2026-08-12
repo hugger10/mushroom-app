@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- 圆形背景，符合主流应用图标规范 -->
+  <circle cx="100" cy="100" r="90" fill="#4F46E5" />
+
+  <!-- 极简 M 字路径 (纯白，完美居中) -->
+  <path d="M 65,135 L 65,75 L 100,105 L 135,75 L 135,135" 
+        stroke="#FFFFFF" 
+        stroke-width="16" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none" />
+
+  <!-- 优化后的红点位置 (位于右上角峰值斜上方 cx="142" cy="68"，绝不切边) -->
+  <!-- 4px 的保护描边会在 M 的右上角自然切出一个优美的微弯弧口，极具设计细节 -->
+  <circle cx="142" cy="68" r="10" fill="#EF4444" stroke="#4F46E5" stroke-width="4" />
+</svg>

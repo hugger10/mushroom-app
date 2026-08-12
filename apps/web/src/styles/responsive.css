@@ -1,0 +1,115 @@
+@media (max-width: 980px) {
+  .im-main-layout {
+    padding: 0px;
+  }
+
+  .im-sidebar-panel {
+    background: var(--im-surface);
+  }
+
+  .im-search-modal-toolbar,
+  .im-search-result-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .im-search-modal-shell {
+    min-height: min(76vh, 700px);
+  }
+
+  .im-chat-header {
+    padding: 6px 20px;
+  }
+
+  .im-network-banner {
+    padding: 10px 14px;
+    align-items: flex-start;
+  }
+
+  .im-message-scroll {
+    padding: 16px 14px 10px;
+  }
+
+  .im-message-stack {
+    max-width: 82%;
+  }
+
+  .im-group-member-workspace-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .im-group-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .im-group-member-toolbar,
+  .im-group-member-toolbar-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .im-chat-action-group {
+    gap: 8px;
+  }
+
+  .im-chat-secondary-button.ant-btn {
+    padding-inline: 12px;
+  }
+
+  .im-message-floating-actions {
+    right: 16px;
+    bottom: 72px;
+  }
+
+  .im-profile-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .im-profile-summary-grid,
+  .im-device-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .im-group-profile-hero {
+    align-items: flex-start;
+  }
+
+  .im-create-group-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .im-app-header {
+    height: 74px;
+  }
+
+  .im-app-brand-badge {
+    display: none;
+  }
+
+  .im-conversation-topbar {
+    padding: 14px;
+  }
+
+  .im-conversation-item.ant-list-item {
+    padding: 12px;
+    border-radius: 15px;
+  }
+
+  .im-state-pill {
+    height: 20px;
+    padding: 0 7px;
+    font-size: 10px;
+  }
+
+  .im-group-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .im-network-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

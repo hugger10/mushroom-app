@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 812" width="100%" height="100%">
+  <defs>
+    <style>
+      /* ================= 核心颜色变量 (1:1 原图提取) ================= */
+      :root {
+        --accent-cyan: #00f0ff;      /* 霓虹青色 (皮肤/发光屏幕) */
+        --accent-pink: #ff007a;      /* 霓虹洋红 (头发/几何圈) */
+        --shirt-main: #ffffff;       /* 衬衫纯白 */
+        --shirt-shadow: #e6ebf5;     /* 衬衫阴影 */
+        --pants-main: #184cd4;       /* 裤子亮蓝 */
+        --pants-shadow: #0d329e;     /* 裤子暗蓝 */
+        --line-color: #ffffff;       /* 白色线条 */
+        --vr-base: #0b1a4a;          /* VR眼镜框深蓝 */
+        --shirt-line: #051b5c;       /* 衬衫领口排线 */
+
+        /* 默认: 暗黑模式 (原图原生配色) */
+        --bg-bottom: #0a0e1c;        /* 底部极暗深蓝 (用于放置登录UI的区域) */
+        --bg-top-1: #04236e;         /* 顶部渐变起点的亮蓝 */
+        --bg-top-2: #01153d;         /* 顶部渐变终点的深蓝 */
+      }
+
+      /* ================= 自动适应: 浅色模式 ================= */
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg-bottom: #ffffff;      /* 底部变为纯白，适合白天 */
+          --bg-top-1: #2a5de8;       /* 顶部变为更明亮的科技蓝 */
+          --bg-top-2: #092c8c;
+        }
+      }
+
+      /* 动画过渡，让深浅色切换更丝滑 */
+      .bg-transition {
+        transition: fill 0.3s ease, stop-color 0.3s ease;
+      }
+    </style>
+
+    <!-- 背景深蓝渐变 -->
+    <linearGradient id="topBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="var(--bg-top-1)" class="bg-transition" />
+      <stop offset="100%" stop-color="var(--bg-top-2)" class="bg-transition" />
+    </linearGradient>
+
+    <!-- 裁剪蒙版：确保所有元素贴合下沉的弧线 -->
+    <clipPath id="curveClip">
+      <path d="M0,0 L375,0 L375,280 Q187.5,420 0,280 Z" />
+    </clipPath>
+  </defs>
+
+  <!-- 0. 最底层的纯色背景 (提供给下方登录 UI 的留白区) -->
+  <rect width="100%" height="100%" fill="var(--bg-bottom)" class="bg-transition" />
+
+  <!-- 1. 顶层带下沉弧度的深蓝渐变背景 -->
+  <path d="M0,0 L375,0 L375,280 Q187.5,420 0,280 Z" fill="url(#topBg)" />
+
+  <!-- 2. 将背景悬浮物与人物放入裁剪组 -->
+  <g clip-path="url(#curveClip)">
+
+    <!-- ================= 还原漂浮的几何与霓虹元素 ================= -->
+    <g fill="none" stroke-width="1.5" stroke-linejoin="round">
+      
+      <!-- 左上空心立体魔方 -->
+      <g stroke="var(--line-color)" transform="translate(40, 70)">
+        <path d="M 0,10 L 12,0 L 24,10 L 24,24 L 12,34 L 0,24 Z" />
+        <path d="M 0,10 L 12,18 L 24,10 M 12,18 L 12,34" />
+      </g>
+      
+      <!-- 左侧霓虹洋红圆圈 -->
+      <circle cx="75" cy="110" r="7" stroke="var(--accent-pink)" stroke-width="2"/>
+      
+      <!-- 左侧青色空心魔方 -->
+      <g stroke="var(--accent-cyan)" transform="translate(70, 190) scale(1.3)">
+        <path d="M 0,10 L 12,0 L 24,10 L 24,24 L 12,34 L 0,24 Z" />
+        <path d="M 0,10 L 12,18 L 24,10 M 12,18 L 12,34" />
+      </g>
+      
+      <!-- 左下洋红斜线 -->
+      <line x1="120" y1="245" x2="140" y2="240" stroke="var(--accent-pink)" stroke-width="2"/>
+      
+      <!-- 右侧顶部洋红直角 -->
+      <polyline points="320,60 340,60 340,80" stroke="var(--accent-pink)" stroke-width="2"/>
+      
+      <!-- 右侧青色三角形 -->
+      <polygon points="275,230 290,255 260,255" stroke="var(--accent-cyan)" stroke-width="2"/>
+      
+      <!-- 右侧青色空心魔方 -->
+      <g stroke="var(--accent-cyan)" transform="translate(305, 140) scale(1.4)">
+        <path d="M 0,10 L 12,0 L 24,10 L 24,24 L 12,34 L 0,24 Z" />
+        <path d="M 0,10 L 12,18 L 24,10 M 12,18 L 12,34" />
+      </g>
+      
+      <!-- 头顶青色三角形 -->
+      <polygon points="215,70 230,95 200,95" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+
+      <!-- 散落的小白点与小圆 -->
+      <circle cx="270" cy="70" r="3" stroke="var(--line-color)" />
+      <circle cx="55" cy="240" r="2" stroke="var(--line-color)" />
+      <circle cx="255" cy="105" r="2.5" fill="var(--accent-pink)" stroke="none" />
+      <circle cx="45" cy="170" r="2" fill="var(--accent-pink)" stroke="none" />
+    </g>
+
+    <!-- ================= 还原 1:1 VR 插画主体 ================= -->
+    <!-- 裤子与双腿 -->
+    <rect x="160" y="260" width="25" height="100" fill="var(--pants-main)" />
+    <rect x="187" y="260" width="23" height="100" fill="var(--pants-shadow)" />
+    <line x1="186" y1="260" x2="186" y2="350" stroke="#071b5c" stroke-width="2" />
+
+    <!-- 白衬衫躯干主体 -->
+    <polygon points="155,260 220,260 225,170 215,140 160,140 150,170" fill="var(--shirt-main)" />
+    
+    <!-- 衬衫右侧的折叠/立体阴影块 -->
+    <polygon points="190,260 220,260 225,170 215,140 195,145 190,180" fill="var(--shirt-shadow)" />
+
+    <!-- 青色脖子 -->
+    <rect x="178" y="125" width="16" height="20" fill="var(--accent-cyan)" />
+
+    <!-- 左手臂 (画面左侧，弯曲抬起) -->
+    <polygon points="160,140 100,185 135,110 145,115 125,170 150,170" fill="var(--shirt-main)" />
+    <!-- 左手臂内折痕线 -->
+    <polyline points="125,170 100,185 160,140" stroke="var(--shirt-line)" stroke-width="1.5" fill="none"/>
+
+    <!-- 右手臂 (画面右侧，挥手抬起) -->
+    <polygon points="215,140 275,185 270,110 260,110 250,170 225,170" fill="var(--shirt-main)" />
+    <polygon points="225,170 250,170 260,110 252,110 240,165" fill="var(--shirt-shadow)" />
+    <!-- 右手臂内折痕线 -->
+    <polyline points="225,170 275,185 215,140" stroke="var(--shirt-line)" stroke-width="1.5" fill="none"/>
+
+    <!-- 衬衫领口与门襟 -->
+    <polygon points="186,155 170,140 180,135" fill="var(--shirt-main)" stroke="var(--shirt-line)" stroke-width="1.5" stroke-linejoin="round"/>
+    <polygon points="186,155 205,140 195,135" fill="var(--shirt-main)" stroke="var(--shirt-line)" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="186" y1="155" x2="186" y2="260" stroke="var(--shirt-line)" stroke-width="1.5" />
+
+    <!-- 头部下半部分 (青色脸颊与下巴) -->
+    <polygon points="165,105 205,105 210,120 195,130 175,130 165,120" fill="var(--accent-cyan)" />
+
+    <!-- VR 头显设备 -->
+    <rect x="155" y="85" width="60" height="25" rx="3" fill="var(--vr-base)" />
+    <rect x="160" y="90" width="50" height="15" rx="2" fill="var(--accent-cyan)" />
+    <!-- VR绑带 -->
+    <rect x="215" y="93" width="15" height="8" fill="var(--vr-base)" />
+
+    <!-- 左手 (青色，扣在VR镜框左侧) -->
+    <path d="M 135,110 L 145,90 L 155,95 L 160,105 L 145,115 Z" fill="var(--accent-cyan)" />
+
+    <!-- 右手 (青色，右侧挥手，带有分明的几何手指) -->
+    <path d="M 270,110 L 260,110 L 255,90 L 260,85 L 265,95 L 268,80 L 273,85 L 275,95 L 280,85 L 285,90 L 280,105 Z" fill="var(--accent-cyan)" stroke="var(--bg-top-1)" stroke-width="0.5"/>
+
+    <!-- 霓虹粉头发 (尖锐的赛博几何切面) -->
+    <polygon points="155,85 165,55 180,65 190,50 205,65 220,60 215,80 230,90 205,95" fill="var(--accent-pink)" />
+    <!-- 刘海覆盖在VR设备顶部 -->
+    <polygon points="160,85 175,75 195,75 205,85" fill="var(--accent-pink)" />
+
+  </g>
+</svg>

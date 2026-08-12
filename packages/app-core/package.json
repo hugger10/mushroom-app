@@ -1,0 +1,15 @@
+{
+  "name": "@mushroom/app-core",
+  "version": "1.0.0",
+  "description": "Platform-neutral application core for Mushroom clients",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "node --no-warnings=ExperimentalWarning --import ./test/loader.mjs --test \"test/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@mushroom/shared": "workspace:*"
+  }
+}

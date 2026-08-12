@@ -1,0 +1,81 @@
+{
+  "name": "@mushroom/electron",
+  "version": "1.0.0",
+  "description": "Electron desktop application for IM app",
+  "main": "dist-electron/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "rebuild:native": "electron-rebuild -f -w better-sqlite3",
+    "build": "electron-vite build",
+    "test": "pnpm build && node --test test/*.test.mjs",
+    "build:all": "npm run build && electron-builder --publish=never",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux",
+    "preview": "electron-vite preview",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mushroom/app-core": "workspace:*",
+    "@mushroom/shared": "workspace:*",
+    "better-sqlite3": "12.10.0",
+    "electron-log": "^5.4.3",
+    "electron-store": "^8.1.0",
+    "undici": "^7.27.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
+    "@types/better-sqlite3": "^7.6.13",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@types/uuid": "^9.0.7",
+    "electron": "^41.2.1",
+    "electron-builder": "^26.8.1",
+    "electron-is-dev": "^3.0.1",
+    "electron-vite": "^4.0.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2"
+  },
+  "build": {
+    "appId": "com.iauto.mushroom",
+    "productName": "Mushroom",
+    "directories": {
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist-electron",
+      "dist"
+    ],
+    "mac": {
+      "icon": "icons/icon.icns",
+      "artifactName": "${productName}_${version}.${ext}",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "icon": "icons/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}_${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}_${version}.${ext}"
+    },
+    "linux": {
+      "icon": "icons/icon.png",
+      "target": [
+        "AppImage"
+      ],
+      "artifactName": "${productName}_${version}.${ext}"
+    }
+  }
+}

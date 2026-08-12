@@ -1,0 +1,324 @@
+.im-addressbook-tabs .ant-tabs-nav::before {
+  border-bottom-color: rgba(148, 163, 184, 0.16);
+}
+
+.im-addressbook-modal .ant-modal-content {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.im-addressbook-modal .ant-modal-header {
+  padding-bottom: 10px;
+}
+
+.im-addressbook-modal .ant-modal-body {
+  padding-top: 8px;
+}
+
+.im-addressbook-modal-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.im-addressbook-modal-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--im-text-soft);
+}
+
+.im-addressbook-shell {
+  display: grid;
+  gap: 8px;
+}
+
+.im-addressbook-tab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.im-addressbook-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding-inline: 7px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.1);
+  color: var(--im-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.im-addressbook-tabs .ant-tabs-tab {
+  padding: 4px 6px 10px;
+  color: var(--im-text-soft);
+}
+
+.im-addressbook-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--im-accent);
+  font-weight: 700;
+}
+
+.im-addressbook-list .ant-list-items {
+  gap: 8px;
+}
+
+.im-addressbook-item.ant-list-item {
+  align-items: center;
+  padding: 10px 12px;
+  border-color: transparent;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 10px 24px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+:root[data-theme="dark"] .im-addressbook-list .ant-list-items {
+  background: transparent;
+}
+
+:root[data-theme="dark"] .im-addressbook-item.ant-list-item {
+  border-color: rgba(148, 163, 184, 0.12);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(148, 163, 184, 0.06);
+}
+
+.im-addressbook-item.ant-list-item .ant-list-item-action {
+  margin-inline-start: 14px;
+}
+
+.im-addressbook-item.ant-list-item .ant-list-item-action > li {
+  padding: 0 0 0 8px;
+}
+
+.im-addressbook-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.im-addressbook-avatar.ant-avatar {
+  flex: 0 0 auto;
+  color: #f8fffb;
+  font-weight: 700;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.im-addressbook-contact-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.im-addressbook-contact-nickname {
+  color: var(--im-text);
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.im-addressbook-contact-username {
+  color: var(--im-text-soft);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.im-addressbook-contact-chip {
+  max-width: 132px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--im-accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.im-addressbook-contact-description {
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--im-text-soft);
+}
+
+.im-addressbook-action {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--im-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.im-addressbook-action:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.22);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+}
+
+.im-addressbook-action-primary {
+  border-color: transparent;
+  background: var(--im-accent);
+  color: #f8fffb;
+}
+
+.im-addressbook-action-danger {
+  border-color: rgba(239, 68, 68, 0.22);
+  background: rgba(254, 242, 242, 0.92);
+  color: #b91c1c;
+}
+
+.im-addressbook-action-danger:hover {
+  border-color: rgba(239, 68, 68, 0.34);
+  background: rgba(254, 226, 226, 0.96);
+}
+
+.im-addressbook-action-secondary {
+  border-color: rgba(15, 118, 110, 0.2);
+  background: rgba(240, 253, 250, 0.92);
+  color: var(--im-accent);
+}
+
+.im-addressbook-action-secondary:hover {
+  border-color: rgba(15, 118, 110, 0.34);
+  background: rgba(204, 251, 241, 0.7);
+}
+
+:root[data-theme="dark"] .im-addressbook-action {
+  border-color: rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, 0.88);
+  color: var(--im-text);
+}
+
+:root[data-theme="dark"] .im-addressbook-action:hover {
+  border-color: rgba(45, 212, 191, 0.34);
+  background: rgba(30, 41, 59, 0.96);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+:root[data-theme="dark"] .im-addressbook-action-danger {
+  border-color: rgba(248, 113, 113, 0.26);
+  background: rgba(127, 29, 29, 0.32);
+  color: #fecaca;
+}
+
+:root[data-theme="dark"] .im-addressbook-action-danger:hover {
+  border-color: rgba(248, 113, 113, 0.42);
+  background: rgba(153, 27, 27, 0.42);
+}
+
+:root[data-theme="dark"] .im-addressbook-action-secondary {
+  border-color: rgba(45, 212, 191, 0.26);
+  background: rgba(19, 78, 74, 0.34);
+  color: #99f6e4;
+}
+
+:root[data-theme="dark"] .im-addressbook-action-secondary:hover {
+  border-color: rgba(45, 212, 191, 0.44);
+  background: rgba(17, 94, 89, 0.46);
+}
+
+@media (max-width: 640px) {
+  .im-addressbook-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .im-addressbook-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ── Contacts Inline Panel (sidebar) ── */
+
+.im-contacts-inline-panel .im-addressbook-list .ant-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-addressbook-item {
+  cursor: pointer;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.56);
+  box-shadow: none;
+  transition: none;
+  transform: none;
+}
+
+.im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-addressbook-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: none;
+  transform: none;
+}
+
+.im-contacts-inline-panel .im-contacts-inline-tabs .ant-tabs-content-holder {
+  /* padding: 0 12px 12px 12px; */
+  padding-top: 10px;
+}
+
+.im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-contacts-inline-item-active,
+.im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-contacts-inline-item-active:hover {
+  background: var(--im-conv-item-active-bg);
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="dark"]
+  .im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-addressbook-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+:root[data-theme="dark"]
+  .im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-addressbook-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  transform: none;
+}
+
+:root[data-theme="dark"]
+  .im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-contacts-inline-item-active,
+:root[data-theme="dark"]
+  .im-contacts-inline-panel
+  .ant-list-item.im-action-list-item.im-contacts-inline-item-active:hover {
+  background: var(--im-conv-item-active-bg);
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+}

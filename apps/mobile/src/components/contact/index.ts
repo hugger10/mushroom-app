@@ -1,0 +1,1 @@
+export { FriendRow } from "./FriendRow";

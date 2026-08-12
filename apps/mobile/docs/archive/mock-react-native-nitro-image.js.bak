@@ -1,0 +1,39 @@
+const React = require("react");
+const { View } = require("react-native");
+
+function NitroImage(props) {
+  return React.createElement(View, { ...props, testID: props.testID });
+}
+
+function NativeNitroImage(props) {
+  return React.createElement(View, { ...props, testID: props.testID });
+}
+
+function useImage(_source) {
+  return { image: undefined, error: undefined };
+}
+
+function useImageLoader(_source) {
+  return undefined;
+}
+
+function loadImage() {
+  return Promise.resolve(undefined);
+}
+
+function createImageLoader() {
+  return undefined;
+}
+
+module.exports = {
+  __esModule: true,
+  NitroImage,
+  NativeNitroImage,
+  useImage,
+  useImageLoader,
+  loadImage,
+  createImageLoader,
+  Images: {},
+  ImageLoaders: {},
+  ImageUtils: {}
+};

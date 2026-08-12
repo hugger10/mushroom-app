@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <!-- 圆形背景，符合主流应用图标规范 -->
+  <circle cx="100" cy="100" r="90" fill="#4F46E5" />
+
+  <!-- 极简 M 字路径 (精准对称，四角做圆滑处理) -->
+  <path d="M 65,135 L 65,75 L 100,105 L 135,75 L 135,135" 
+        stroke="#FFFFFF" 
+        stroke-width="16" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none" />
+
+  <!-- 移动到正中心的红点 (采用背景色描边作为保护间隔，确保重叠处干净整洁) -->
+  <circle cx="100" cy="100" r="10" fill="#EF4444" stroke="#4F46E5" stroke-width="4" />
+</svg>

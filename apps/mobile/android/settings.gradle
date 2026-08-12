@@ -1,0 +1,21 @@
+pluginManagement {
+    includeBuild("../../../node_modules/@react-native/gradle-plugin")
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url = uri("https://developer.huawei.com/repo/") }
+    }
+}
+plugins { id("com.facebook.react.settings") }
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://developer.huawei.com/repo/") }
+    }
+}
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'com.outland.mushroom'
+include ':app'
+includeBuild('../../../node_modules/@react-native/gradle-plugin')

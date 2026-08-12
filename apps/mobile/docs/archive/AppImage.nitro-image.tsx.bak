@@ -1,0 +1,134 @@
+import { useEffect, useRef } from "react";
+import type {
+  ImageResizeMode,
+  StyleProp,
+  ViewProps,
+  ViewStyle
+} from "react-native";
+import { NitroImage, useImage } from "react-native-nitro-image";
+
+/**
+ * AppImage (nitro-image edition).
+ *
+ * Thin wrapper over `react-native-nitro-image` that exposes an API close
+ * enough to React Native's `<Image>` to let us swap call-sites without
+ * rewriting them. Differences vs. `<Image>`:
+ *
+ * - `source` only accepts `{ uri }`. nitro-image (via
+ *   `react-native-nitro-web-image`) does not currently support custom
+ *   `headers`; the project's call-sites do not pass any.
+ * - `resizeMode` accepts `cover|contain|center|stretch` (1:1 mapping with
+ *   nitro-image's `resizeMode`). `repeat` / unknown values fall back to
+ *   `cover`.
+ * - `onError` is surfaced via the `useImage` hook (fires whenever the
+ *   underlying load promise rejects). Other RN-style callbacks
+ *   (`onLoad`, `onLoadStart`, `onLoadEnd`, `onProgress`) are accepted
+ *   for API parity; `onLoad` / `onError` are wired through (no current
+ *   caller depends on `onProgress`).
+ *
+ * The component continues to power the signed-URL self-heal flow in
+ * `MessageBubble`: when the load throws (e.g. a 403 from an expired
+ * signed URL), `onError` fires and the caller re-fetches a fresh URL.
+ *
+ * Native decoding + memory/disk caching is handled by nitro-image on the
+ * UI thread, replacing the previous FastImage (SDWebImage/Glide)
+ * pipeline.
+ */
+export type AppImageProps = ViewProps & {
+  source: { uri: string; headers?: Record<string, string>; priority?: string };
+  /**
+   * Accepts a ViewStyle. nitro-image's `<NitroImage>` is a host view,
+   * not an `Image`-specific type, so we accept plain ViewStyle and pass
+   * it through.
+   */
+  style?: StyleProp<ViewStyle>;
+  resizeMode?: ImageResizeMode;
+  /** Accepted for API parity; nitro-image has no equivalent. */
+  fallback?: boolean;
+  /** Accepted for API parity; nitro-image has no tinting on the view. */
+  tintColor?: string;
+  onLoad?: () => void;
+  onLoadStart?: () => void;
+  onLoadEnd?: () => void;
+  onError?: () => void;
+  onProgress?: (event: unknown) => void;
+  testID?: string;
+};
+
+type NitroResizeMode = "cover" | "contain" | "center" | "stretch";
+
+function mapResize(mode: ImageResizeMode | undefined): NitroResizeMode {
+  switch (mode) {
+    case "contain":
+      return "contain";
+    case "stretch":
+      return "stretch";
+    case "center":
+      return "center";
+    case "cover":
+    case "repeat":
+    default:
+      return "cover";
+  }
+}
+
+function mapPriority(value?: string): "low" | "default" | "high" {
+  if (value === "high") return "high";
+  if (value === "low") return "low";
+  return "default";
+}
+
+export function AppImage(props: AppImageProps) {
+  const {
+    source,
+    style,
+    resizeMode = "cover",
+    onLoad,
+    onLoadStart,
+    onLoadEnd,
+    onError,
+    testID
+  } = props;
+
+  // Drive the load via `useImage` so we can observe success/failure on
+  // the JS side and forward to RN-style `onLoad` / `onError` callbacks
+  // (preserves the signed-URL self-heal flow). The resolved Image is
+  // then handed to <NitroImage> directly — no second load.
+  const result = useImage({
+    url: source.uri,
+    options: { priority: mapPriority(source.priority) }
+  });
+
+  // Fire onLoadStart once per source change. The hook always re-starts
+  // in the "loading" state when the input source changes, so emitting
+  // when the url changes matches RN's <Image> semantics.
+  const lastUriRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (lastUriRef.current !== source.uri) {
+      lastUriRef.current = source.uri;
+      onLoadStart?.();
+    }
+  }, [source.uri, onLoadStart]);
+
+  useEffect(() => {
+    if (result.image) {
+      onLoad?.();
+      onLoadEnd?.();
+    } else if (result.error) {
+      onError?.();
+      onLoadEnd?.();
+    }
+  }, [result.image, result.error, onLoad, onError, onLoadEnd]);
+
+  return (
+    <NitroImage
+      image={result.image ?? { url: source.uri }}
+      recyclingKey={source.uri}
+      resizeMode={mapResize(resizeMode)}
+      style={style as StyleProp<ViewStyle>}
+      testID={testID}
+    />
+  );
+}
+
+export default AppImage;

@@ -1,0 +1,96 @@
+{
+  "name": "mushroom",
+  "version": "1.0.0",
+  "description": "Cross-platform IM application supporting Electron, Web, Android, and iOS",
+  "private": true,
+  "author": "mushroom",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "node scripts/patch-react-native-video-media3.mjs",
+    "prepare": "husky",
+    "dev": "node scripts/dev.js",
+    "build": "node scripts/build.js",
+    "dev:server": "pnpm --filter @mushroom/server dev",
+    "db:migrate": "pnpm --filter @mushroom/server migrate",
+    "db:seed": "pnpm --filter @mushroom/server seed",
+    "db:reset": "pnpm --filter @mushroom/server reset",
+    "build:web": "pnpm --filter @mushroom/web build",
+    "build:electron": "pnpm --filter @mushroom/electron build",
+    "build:mobile": "pnpm --filter @mushroom/mobile build",
+    "build:server": "pnpm --filter @mushroom/server build",
+    "dev:web": "pnpm --filter @mushroom/web dev",
+    "dev:electron": "pnpm --filter @mushroom/electron dev",
+    "dev:mobile": "pnpm --filter @mushroom/mobile dev",
+    "lint:eslint": "eslint --cache --max-warnings 0 \"{apps,server,packages,scripts}/**/*.{js,mjs,cjs,ts,tsx}\" --fix",
+    "lint:prettier": "prettier --write \"{apps,server,packages,scripts,docs}/**/*.{js,mjs,cjs,ts,tsx,json,css,scss,html,md}\" \"*.{json,md}\"",
+    "lint:stylelint": "stylelint --cache --fix \"{apps,packages}/**/*.{css,scss}\" --cache-location node_modules/.cache/stylelint/",
+    "lint": "pnpm lint:eslint && pnpm type-check && pnpm lint:prettier && pnpm lint:stylelint",
+    "type-check": "pnpm -r exec tsc --noEmit",
+    "clean": "pnpm -r exec rm -rf dist node_modules .turbo",
+    "fresh": "pnpm clean && pnpm install",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish",
+    "electron:build": "pnpm --filter @mushroom/electron build:all",
+    "mobile:android": "pnpm --filter @mushroom/mobile android",
+    "mobile:ios": "pnpm --filter @mushroom/mobile ios",
+    "type-check:all": "tsc -b --pretty false"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react-swc": "^4.0.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "husky": "^9",
+    "lint-staged": "^15",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.24.0",
+    "stylelint-prettier": "^5.0.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.39.1",
+    "vite": "^7.1.2"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,html,md}": [
+      "prettier --write"
+    ]
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "19.2.3",
+      "react-dom": "19.2.3",
+      "react-test-renderer": "19.2.3",
+      "node-abi": "^4.31.0"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "node-pre-gyp"
+      ]
+    },
+    "ignoredBuiltDependencies": [
+      "sharp"
+    ],
+    "onlyBuiltDependencies": [
+      "electron",
+      "sharp"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "vscode-icons-team.vscode-icons",
+    "ms-azuretools.vscode-docker",
+    "stylelint.vscode-stylelint",
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "lokalise.i18n-ally",
+    "redhat.vscode-yaml",
+    "csstools.postcss",
+    "mikestead.dotenv",
+    "antfu.iconify"
+  ]
+}

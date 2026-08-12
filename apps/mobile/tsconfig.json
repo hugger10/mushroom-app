@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2022"],
+    "types": ["react-native", "jest"],
+    "noEmit": true,
+    "allowJs": true
+  },
+  "include": ["main.tsx", "index.js", "src", "__tests__"]
+}

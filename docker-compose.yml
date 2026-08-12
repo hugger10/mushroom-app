@@ -1,0 +1,112 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=mushroom
+      - POSTGRES_PASSWORD=mushroom89123
+      - POSTGRES_DB=mushroom
+      - TZ=Asia/Shanghai
+    volumes:
+      - postgres-data:/var/lib/postgresql/18/docker
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U mushroom -d mushroom"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7.4.4
+    container_name: redis
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass "test1Pqw2" --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "test1Pqw2", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: minio
+    command: server /data --console-address ":9001" --address ":9000"
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=minio123@1
+      - MINIO_BROWSER_REDIRECT_URL=http://minio.mushtoom.top
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  livekit:
+    image: livekit/livekit-server:v1.10.1
+    container_name: livekit
+    command: --config /etc/livekit.yaml
+    ports:
+      - 7880:7880/tcp
+      - 7881:7881/tcp
+      - 50100-50200:50100-50200/udp
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/livekit/config.yaml:/etc/livekit.yaml:ro
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:7880"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  coturn:
+    image: coturn/coturn:4.7.0
+    container_name: coturn
+    network_mode: "host"
+    privileged: true
+    user: root
+    volumes:
+      - ./data/coturn/turnserver.conf:/etc/coturn/turnserver.conf
+    restart: unless-stopped
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    image: mushroom-server:latest
+    container_name: mushroom-server
+    privileged: true
+    env_file: server/.env.docker
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      livekit:
+        condition: service_healthy
+      coturn:
+        condition: service_started
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:

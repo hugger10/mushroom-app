@@ -1,0 +1,27 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+
+# Unused documentation
+docs/
+*.md
+
+# Unused apps (server Dockerfile only needs server/ + packages/shared/)
+apps/
+scripts/
+tools/
+
+# OS artifacts
+.DS_Store
+Thumbs.db

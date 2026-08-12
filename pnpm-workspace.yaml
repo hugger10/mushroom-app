@@ -1,0 +1,16 @@
+packages:
+  # 应用程序
+  - "apps/*"
+  - "server"
+
+  # 共享包
+  - "packages/*"
+
+  # 开发工具
+  - "tools/*"
+
+  - "!**/node_modules/**"
+  - "!**/dist/**"
+  - "!**/build/**"
+  - "!scripts/**"
+  - "!docs/**"

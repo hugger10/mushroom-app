@@ -1,0 +1,112 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission
+      android:name="android.permission.READ_EXTERNAL_STORAGE"
+      android:maxSdkVersion="32" />
+    <uses-permission
+      android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+      android:maxSdkVersion="28" />
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:allowBackup="false"
+      tools:replace="android:allowBackup"
+      android:theme="@style/AppTheme"
+      android:usesCleartextTraffic="${usesCleartextTraffic}"
+      android:networkSecurityConfig="@xml/network_security_config"
+      android:supportsRtl="true">
+      <meta-data
+        android:name="mushroom.xiaomi.push.APP_ID"
+        android:value="${mushroomXiaomiPushAppId}" />
+      <meta-data
+        android:name="mushroom.xiaomi.push.APP_KEY"
+        android:value="${mushroomXiaomiPushAppKey}" />
+      <meta-data
+        android:name="mushroom.xiaomi.push.REGION"
+        android:value="${mushroomXiaomiPushRegion}" />
+      <activity
+        android:name=".MainActivity"
+        android:label="@string/app_name"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+        android:launchMode="singleTask"
+        android:supportsPictureInPicture="true"
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+      <!-- Override Notifee's bundled ForegroundService type (defaults to
+           "shortService", which is time-limited and disallowed for a call).
+           Our in-call keep-alive service (notifications/ongoing-call.ts)
+           declares microphone|camera at runtime; the manifest must declare a
+           matching superset for Android 14+.
+           FRAGILITY NOTE: this override is tied to Notifee's service class name
+           "app.notifee.core.ForegroundService". If Notifee renames this class or
+           adds new manifest attributes in a future release the tools:replace may
+           fail silently or cause a manifest-merge conflict. Re-verify on every
+           @notifee/react-native major version bump.
+           Last verified: @notifee/react-native 7.x (class name unchanged since v5). -->
+      <service
+        android:name="app.notifee.core.ForegroundService"
+        android:foregroundServiceType="microphone|camera|shortService"
+        tools:replace="android:foregroundServiceType" />
+
+      <!-- Xiaomi Mi-Push: receive call payloads while backgrounded/killed and
+           bridge to a HeadlessJS task that drives the full-screen incoming-call
+           notification. -->
+      <service
+        android:name="com.outland.mushroom.xiaomi.XiaomiHeadlessService"
+        android:exported="false"
+        android:foregroundServiceType="microphone" />
+
+      <!-- Self-managed telecom ConnectionService for incoming calls
+           (com.outland.mushroom.call). Registers a CAPABILITY_SELF_MANAGED
+           phone account that needs no READ_PHONE_NUMBERS / CALL_PHONE
+           permissions; the OS rings and shows a lock-screen call notification,
+           while the full-screen incoming-call UI is rendered by our Notifee
+           notification + CallOverlay. -->
+      <service
+        android:name="com.outland.mushroom.call.MeshConnectionService"
+        android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE"
+        android:exported="true">
+        <intent-filter>
+          <action android:name="android.telecom.ConnectionService" />
+        </intent-filter>
+      </service>
+
+      <receiver
+        android:name="com.outland.mushroom.xiaomi.XiaomiPushReceiver"
+        android:exported="true">
+        <intent-filter>
+          <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="com.xiaomi.mipush.ERROR" />
+        </intent-filter>
+      </receiver>
+    </application>
+</manifest>

@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "exclude": ["node_modules", "dist", "build"],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/app-core" },
+    { "path": "./apps/web" },
+    { "path": "./apps/electron" },
+    { "path": "./apps/mobile" },
+    { "path": "./server" }
+  ]
+}
