@@ -33,7 +33,6 @@ target 'Mesh' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'react-native-ios-utilities', :git => 'https://github.com/dominicstop/react-native-ios-utilities.git', :tag => 'v5.2.0'
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
 
