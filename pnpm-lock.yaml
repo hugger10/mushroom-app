@@ -244,6 +244,9 @@ importers:
       react-native-ios-context-menu:
         specifier: ^3.2.1
         version: 3.2.1(react-native-ios-utilities@5.2.0)(react-native@0.85.0)(react@19.2.3)
+      react-native-ios-utilities:
+        specifier: ^5.2.0
+        version: 5.2.0(react-native@0.85.0)(react@19.2.3)
       react-native-mmkv:
         specifier: ^4.3.1
         version: 4.3.1(react-native-nitro-modules@0.35.4)(react-native@0.85.0)(react@19.2.3)
