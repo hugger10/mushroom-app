@@ -48,7 +48,17 @@ jobs:
           bundle exec pod install
 
       - name: Prepare env file
-        run: cp apps/mobile/.env.example apps/mobile/.env
+        env:
+          JPUSH_APPKEY: ${{ secrets.JPUSH_APPKEY }}
+          JPUSH_PRODUCTION: ${{ vars.JPUSH_PRODUCTION }}
+        run: |
+          cp apps/mobile/.env.example apps/mobile/.env
+          if [ -n "$JPUSH_APPKEY" ]; then
+            printf 'JPUSH_APPKEY=%s\n' "$JPUSH_APPKEY" >> apps/mobile/.env
+          fi
+          if [ -n "$JPUSH_PRODUCTION" ]; then
+            printf 'JPUSH_PRODUCTION=%s\n' "$JPUSH_PRODUCTION" >> apps/mobile/.env
+          fi
 
       - name: Build app (unsigned)
         run: |

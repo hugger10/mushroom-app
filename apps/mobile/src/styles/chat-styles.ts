@@ -780,11 +780,33 @@ export function chatStyles(theme: AppTheme) {
       alignItems: "center" as const,
       justifyContent: "center" as const
     },
+    composerTrashBody: {
+      position: "absolute" as const,
+      left: 4.5,
+      top: 15,
+      width: 25,
+      height: 27,
+      alignItems: "flex-start" as const,
+      justifyContent: "flex-start" as const,
+      overflow: "hidden" as const
+    },
+    composerTrashBodyIcon: {
+      lineHeight: 25,
+      marginTop: -6.5
+    },
     composerTrashLid: {
       position: "absolute" as const,
-      top: 1,
-      right: 3,
-      transformOrigin: "left center"
+      left: 4.5,
+      top: 8.5,
+      width: 25,
+      height: 6.5,
+      alignItems: "flex-start" as const,
+      justifyContent: "flex-start" as const,
+      overflow: "hidden" as const,
+      transformOrigin: "6px 5.5px"
+    },
+    composerTrashLidIcon: {
+      lineHeight: 25
     },
     composerPill: {
       flex: 1,

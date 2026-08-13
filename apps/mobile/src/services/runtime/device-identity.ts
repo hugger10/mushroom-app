@@ -38,7 +38,7 @@ function resolveApiBaseUrl(): string {
     return "http://127.0.0.1:9100";
   }
 
-  return "https://mushroom.top";
+  return "https://mesh.outland.top";
 }
 
 function getDefaultApiBaseUrl(): string {

@@ -156,10 +156,7 @@ export function Composer(props: {
       "clamp"
     );
     return {
-      transform: [
-        { translateX: -2 },
-        { rotate: `${-60 * openProgress * (1 - closeProgress)}deg` }
-      ]
+      transform: [{ rotate: `${-100 * openProgress * (1 - closeProgress)}deg` }]
     };
   });
 
@@ -362,16 +359,24 @@ export function Composer(props: {
             <Animated.View
               style={[styles.composerTrashTarget, trashTargetAnimatedStyle]}
             >
+              <View style={styles.composerTrashBody}>
+                <Ionicons
+                  name="trash-outline"
+                  size={25}
+                  color={theme.colors.danger}
+                  style={styles.composerTrashBodyIcon}
+                />
+              </View>
               <Animated.View
                 style={[styles.composerTrashLid, trashLidAnimatedStyle]}
               >
-                <Ionicons name="remove" size={18} color={theme.colors.danger} />
+                <Ionicons
+                  name="trash-outline"
+                  size={25}
+                  color={theme.colors.danger}
+                  style={styles.composerTrashLidIcon}
+                />
               </Animated.View>
-              <Ionicons
-                name="trash-outline"
-                size={25}
-                color={theme.colors.danger}
-              />
             </Animated.View>
           </View>
         ) : null}

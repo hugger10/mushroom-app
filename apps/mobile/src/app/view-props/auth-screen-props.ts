@@ -7,6 +7,17 @@ import { i18n } from "../../i18n";
 
 const authLog = log.scope("auth");
 
+/**
+ * UI-only 占位：手机号/验证码登录的后端链路尚未接入。
+ * 预留清晰的提交入口，后续接入服务端后无需重写 UI。
+ */
+function phoneMethodUnavailable(state: MobileAppState) {
+  state.setStatus(i18n.t("auth.phoneMethodUnavailable"), "user");
+  authLog.info("phone auth requested but backend not wired", {
+    ready: false
+  });
+}
+
 export function buildAuthScreenProps(params: {
   state: MobileAppState;
   runAction: RunAction;
@@ -15,14 +26,23 @@ export function buildAuthScreenProps(params: {
 
   return {
     mode: state.mode,
+    authMethod: state.authMethod,
     pending: state.pending,
     loginForm: state.loginForm,
     registerForm: state.registerForm,
+    phoneLoginForm: state.phoneLoginForm,
+    phoneRegisterForm: state.phoneRegisterForm,
     onChangeMode: state.setMode,
+    onChangeAuthMethod: state.setAuthMethod,
     onChangeLoginForm: (value: Partial<typeof state.loginForm>) =>
       state.setLoginForm(current => ({ ...current, ...value })),
     onChangeRegisterForm: (value: Partial<typeof state.registerForm>) =>
       state.setRegisterForm(current => ({ ...current, ...value })),
+    onChangePhoneLoginForm: (value: Partial<typeof state.phoneLoginForm>) =>
+      state.setPhoneLoginForm(current => ({ ...current, ...value })),
+    onChangePhoneRegisterForm: (
+      value: Partial<typeof state.phoneRegisterForm>
+    ) => state.setPhoneRegisterForm(current => ({ ...current, ...value })),
     onLogin: () => {
       authLog.info("login start", {
         usernameLen: state.loginForm.username?.length ?? 0
@@ -75,6 +95,9 @@ export function buildAuthScreenProps(params: {
         },
         ""
       );
-    }
+    },
+    onPhoneLogin: () => phoneMethodUnavailable(state),
+    onPhoneRegister: () => phoneMethodUnavailable(state),
+    onSendCode: () => phoneMethodUnavailable(state)
   };
 }

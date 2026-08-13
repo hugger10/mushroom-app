@@ -13,7 +13,7 @@ import {
 import { ChatListSkeleton, Toast } from "../components/ui";
 import { useMobileAppController } from "./controller/useMobileAppController";
 import { MediaPreviewProvider } from "./controller/state/MediaPreviewContext";
-import { AuthScreen } from "../screens/AuthScreen";
+import { AuthScreen } from "../screens/auth/AuthScreen";
 import { AccountSecurityProvider, MeProvider } from "../features/account";
 import { AddContactProvider } from "../features/add-contact";
 import { StartConversationProvider } from "../features/start-conversation";

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import type { MobileAppSnapshot } from "@mushroom/app-core";
-import type { AuthMode, HomeTab } from "../../../types/app";
+import type { AuthMethod, AuthMode, HomeTab } from "../../../types/app";
 import {
   createStatusMessage,
   type StatusLevel,
@@ -26,6 +26,7 @@ export function useAppShellState() {
   // catching up on messages missed while offline / in background.
   const [catchingUp, setCatchingUp] = useState(false);
   const [mode, setMode] = useState<AuthMode>("login");
+  const [authMethod, setAuthMethod] = useState<AuthMethod>("account");
   const [tab, setTab] = useState<HomeTab>("chats");
   const [loginForm, setLoginForm] = useState({
     username: "zhangsan",
@@ -36,6 +37,16 @@ export function useAppShellState() {
     nickname: "",
     password: "",
     confirmPassword: ""
+  });
+  const [phoneLoginForm, setPhoneLoginForm] = useState({
+    phone: "",
+    code: ""
+  });
+  const [phoneRegisterForm, setPhoneRegisterForm] = useState({
+    phone: "",
+    code: "",
+    nickname: "",
+    password: ""
   });
 
   return {
@@ -51,11 +62,17 @@ export function useAppShellState() {
     setCatchingUp,
     mode,
     setMode,
+    authMethod,
+    setAuthMethod,
     tab,
     setTab,
     loginForm,
     setLoginForm,
     registerForm,
-    setRegisterForm
+    setRegisterForm,
+    phoneLoginForm,
+    setPhoneLoginForm,
+    phoneRegisterForm,
+    setPhoneRegisterForm
   };
 }

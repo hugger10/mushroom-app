@@ -16,6 +16,7 @@ import type {
 } from "@mushroom/shared";
 
 export type AuthMode = "login" | "register";
+export type AuthMethod = "account" | "phone";
 export type HomeTab = "chats" | "contacts" | "me";
 export type AttachmentTab = "media" | "files";
 

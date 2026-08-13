@@ -98,9 +98,10 @@ export function baseStyles(theme: AppTheme) {
       color: theme.colors.textSoft,
       fontSize: 13
     },
-    /* ====== Auth：全屏 SVG 背景 + 底部半透明表单浮层 ====== */
+    /* ====== Auth：弧形渐变背景 + 品牌区 + 表单卡片 ====== */
     authRoot: {
-      flex: 1
+      flex: 1,
+      backgroundColor: theme.colors.background
     },
     authKeyboardShell: {
       flex: 1
@@ -111,23 +112,227 @@ export function baseStyles(theme: AppTheme) {
     authScrollContent: {
       flexGrow: 1
     },
-    authSpacer: {
-      flex: 1,
-      minHeight: 200
-    },
-    authFormArea: {
+    /* ---- 背景装饰：多层圆弧叠加出渐变感 + 圆环与泡泡 ---- */
+    authArcBack: {
+      position: "absolute",
+      top: -190,
+      left: -40,
+      right: -40,
+      height: 420,
+      borderBottomLeftRadius: 460,
+      borderBottomRightRadius: 460,
       backgroundColor:
         theme.mode === "dark"
-          ? "rgba(15, 17, 21, 0.92)"
-          : "rgba(255, 255, 255, 0.94)",
-      borderTopLeftRadius: 28,
-      borderTopRightRadius: 28,
-      paddingHorizontal: 24,
-      paddingTop: 28,
-      paddingBottom: 40,
-      gap: 16
+          ? "rgba(0, 168, 132, 0.16)"
+          : "rgba(0, 168, 132, 0.20)"
     },
-    authInputStack: {
+    authArcMid: {
+      position: "absolute",
+      top: -160,
+      left: -20,
+      right: -20,
+      height: 400,
+      borderBottomLeftRadius: 440,
+      borderBottomRightRadius: 440,
+      backgroundColor:
+        theme.mode === "dark"
+          ? "rgba(0, 168, 132, 0.28)"
+          : "rgba(0, 168, 132, 0.42)"
+    },
+    authArcFront: {
+      position: "absolute",
+      top: -130,
+      left: 0,
+      right: 0,
+      height: 370,
+      borderBottomLeftRadius: 420,
+      borderBottomRightRadius: 420,
+      backgroundColor:
+        theme.mode === "dark" ? "rgba(5, 106, 84, 0.95)" : theme.colors.accent
+    },
+    authRingLarge: {
+      position: "absolute",
+      top: 60,
+      right: -70,
+      width: 210,
+      height: 210,
+      borderRadius: 999,
+      borderWidth: 14,
+      borderColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.5 : 0.6
+    },
+    authRingMedium: {
+      position: "absolute",
+      top: 150,
+      left: -52,
+      width: 128,
+      height: 128,
+      borderRadius: 999,
+      borderWidth: 10,
+      borderColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.42 : 0.5
+    },
+    /* ---- 右上「正在输入」聊天气泡：实心气泡 + 三点 + 尾巴 ---- */
+    authChatBubble: {
+      position: "absolute",
+      top: 92,
+      right: 36,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 50,
+      height: 40,
+      borderRadius: 14,
+      backgroundColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.75 : 0.9
+    },
+    authChatBubbleTail: {
+      position: "absolute",
+      left: 10,
+      bottom: -4,
+      width: 11,
+      height: 11,
+      borderRadius: 2,
+      backgroundColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.75 : 0.9,
+      transform: [{ rotate: "45deg" }]
+    },
+    /* ---- 左上「收发消息」：空心聊天气泡 + 尾巴 + 消息点 ---- */
+    authChatOutlineWrap: {
+      position: "absolute",
+      top: 148,
+      left: 44,
+      flexDirection: "row",
+      alignItems: "flex-end",
+      gap: 7
+    },
+    authChatOutlineBox: {
+      width: 34,
+      height: 28
+    },
+    authChatOutline: {
+      width: 34,
+      height: 28,
+      borderRadius: 10,
+      borderWidth: 5,
+      borderColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.35 : 0.42
+    },
+    authChatOutlineTail: {
+      position: "absolute",
+      right: -5,
+      bottom: -7,
+      width: 10,
+      height: 10,
+      borderRadius: 2,
+      borderWidth: 5,
+      borderColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.35 : 0.42,
+      transform: [{ rotate: "45deg" }]
+    },
+    authChatOutlineDot: {
+      width: 9,
+      height: 9,
+      borderRadius: 999,
+      backgroundColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.6 : 0.75
+    },
+    authChatDot: {
+      position: "absolute",
+      top: 240,
+      right: 118,
+      width: 8,
+      height: 8,
+      borderRadius: 999,
+      backgroundColor: theme.colors.accent,
+      opacity: theme.mode === "dark" ? 0.4 : 0.5
+    },
+    /* ---- 顶部 logo ---- */
+    authLogoWrap: {
+      alignItems: "center",
+      marginTop: 18,
+      marginBottom: 26
+    },
+    authLogo: {
+      width: 76,
+      height: 76,
+      borderRadius: 999,
+      shadowColor: theme.colors.shadow,
+      shadowOpacity: theme.mode === "dark" ? 0.55 : 0.22,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 8
+    },
+    /* ---- 顶部占位：维持卡片在品牌区移除前的高度 ---- */
+    authSpacer: {
+      height: 95
+    },
+    /* ---- 表单卡片 ---- */
+    authCard: {
+      marginHorizontal: 20,
+      borderRadius: 28,
+      backgroundColor:
+        theme.mode === "dark" ? "rgba(32, 44, 51, 0.96)" : theme.colors.surface,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      paddingHorizontal: 20,
+      paddingTop: 22,
+      paddingBottom: 24,
+      gap: 16,
+      shadowColor: theme.colors.shadow,
+      shadowOpacity: theme.mode === "dark" ? 0.5 : 0.14,
+      shadowRadius: 28,
+      shadowOffset: { width: 0, height: 16 },
+      elevation: 10
+    },
+    authCardHeader: {
+      gap: 5
+    },
+    authCardTitle: {
+      color: theme.colors.text,
+      fontSize: 25,
+      fontWeight: "800",
+      letterSpacing: -0.5
+    },
+    authCardSubtitle: {
+      color: theme.colors.textMuted,
+      fontSize: 13,
+      lineHeight: 19
+    },
+    /* ---- 方法分段控制器 ---- */
+    authMethodTabs: {
+      flexDirection: "row",
+      backgroundColor: theme.colors.inputBg,
+      borderRadius: 999,
+      padding: 4,
+      gap: 4
+    },
+    authMethodTab: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 9,
+      borderRadius: 999
+    },
+    authMethodTabActive: {
+      backgroundColor: theme.colors.surface,
+      shadowColor: theme.colors.shadow,
+      shadowOpacity: theme.mode === "dark" ? 0.5 : 0.15,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 3 },
+      elevation: 3
+    },
+    authMethodTabText: {
+      color: theme.colors.textSoft,
+      fontSize: 13,
+      fontWeight: "600"
+    },
+    authMethodTabTextActive: {
+      color: theme.colors.accent,
+      fontWeight: "700"
+    },
+    /* ---- 输入行 ---- */
+    authFieldStack: {
       gap: 12
     },
     authInput: {
@@ -142,30 +347,83 @@ export function baseStyles(theme: AppTheme) {
       paddingHorizontal: 16,
       paddingVertical: 14
     },
+    authFieldRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      height: 52,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: "transparent",
+      backgroundColor: theme.colors.inputBg,
+      paddingHorizontal: 14,
+      gap: 10
+    },
+    authFieldRowFocused: {
+      borderColor: theme.colors.accent
+    },
+    authFieldIcon: {
+      color: theme.colors.textSoft
+    },
+    authFieldInput: {
+      flex: 1,
+      color: theme.colors.text,
+      fontSize: 15,
+      paddingVertical: 0
+    },
+    authPhonePrefix: {
+      color: theme.colors.textMuted,
+      fontSize: 15,
+      fontWeight: "700",
+      paddingRight: 10,
+      borderRightWidth: 1,
+      borderRightColor: theme.colors.divider
+    },
+    authEyeBtn: {
+      padding: 4
+    },
+    /* ---- 验证码 ---- */
+    authCodeBtn: {
+      height: 38,
+      paddingHorizontal: 14,
+      borderRadius: 12,
+      backgroundColor: theme.colors.accentSoft,
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    authCodeBtnDisabled: {
+      opacity: 0.5
+    },
+    authCodeBtnText: {
+      color: theme.colors.accent,
+      fontSize: 13,
+      fontWeight: "700"
+    },
+    /* ---- 主按钮 ---- */
     authButton: {
-      height: 48,
-      borderRadius: 24,
+      height: 50,
+      borderRadius: 25,
       backgroundColor: theme.colors.accent,
       alignItems: "center",
       justifyContent: "center",
       shadowColor: theme.colors.accent,
-      shadowOpacity: 0.25,
-      shadowRadius: 10,
-      shadowOffset: { width: 0, height: 4 },
-      elevation: 4
+      shadowOpacity: theme.mode === "dark" ? 0.5 : 0.3,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 5 },
+      elevation: 5
     },
     authButtonDisabled: {
       opacity: 0.5
     },
     authButtonPressed: {
-      opacity: 0.85,
-      transform: [{ scale: 0.98 }]
+      opacity: 0.9,
+      transform: [{ scale: 0.985 }]
     },
     authButtonLabel: {
       color: "#FFFFFF",
       fontSize: 16,
       fontWeight: "700"
     },
+    /* ---- 登录/注册切换 ---- */
     authModeToggle: {
       flexDirection: "row",
       alignItems: "center",

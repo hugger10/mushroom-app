@@ -29,12 +29,23 @@ const translation: TranslationSchema = {
     register: "Register",
     loginSubtitle: "Welcome back. Continue your conversations",
     registerSubtitle: "Create an account and start chatting",
+    methodAccount: "Account",
+    methodPhone: "Phone",
     username: "Username",
     nickname: "Nickname",
     password: "Password",
     confirmPassword: "Confirm Password",
+    phone: "Phone",
+    phonePlaceholder: "Enter your phone number",
+    code: "Verification Code",
+    codePlaceholder: "Enter verification code",
+    sendCode: "Get Code",
+    resendCode: "Resend",
+    codeCountdown: "Resend in {{seconds}}s",
     noAccount: "Don't have an account?",
     hasAccount: "Already have an account?",
+    phoneMethodUnavailable:
+      "This sign-in method is not available yet. Please use your account and password.",
     browserModeLimited: "Browser mode is limited",
     browserModeLimitedDescription:
       "Full chat capability still depends on Electron local storage and sync. You can verify auth and basic screens here, but the desktop client remains the primary experience.",
@@ -50,7 +61,11 @@ const translation: TranslationSchema = {
       passwordRequired: "Please enter your password",
       passwordMin: "Password must be at least 6 characters",
       passwordTooLong: "Password must be 128 characters or fewer",
-      passwordMismatch: "The two passwords do not match"
+      passwordMismatch: "The two passwords do not match",
+      phoneRequired: "Please enter your phone number",
+      phoneInvalid: "Invalid phone number",
+      codeRequired: "Please enter the verification code",
+      codeInvalid: "The code must be 6 digits"
     },
     logoutWipeLocalData: "Also clear local chat data",
     logoutWipeLocalDataHint:

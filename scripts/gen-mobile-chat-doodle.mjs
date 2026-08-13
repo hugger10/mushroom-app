@@ -24,13 +24,14 @@
  *   4. 想要"更清晰的细节"：增大 DENSITY（SVG 渲染分辨率），但产物体积也会变大
  *
  * 说明：
- *   - stroke-opacity 会被 sharp 烘焙进 PNG 的 alpha 通道，PNG 一旦生成
- *     就无法再通过 RN 端 opacity 把"不透明度"补回来，所以调淡/深必须重跑本脚本。
+ *   - stroke-opacity / fill-opacity 会被 sharp 烘焙进 PNG 的 alpha 通道，PNG
+ *     一旦生成就无法再通过 RN 端 opacity 把"不透明度"补回来，所以调淡/深必须重跑本脚本。
  *   - PNG 文件名不变，metro 缓存可能不感知更新；如不刷新请执行：
  *     pnpm --filter @mushroom/mobile start --reset-cache
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 // ────────────────────────────────────────────────────────────────────
@@ -56,7 +57,7 @@ const DENSITY = 220;
 // 以下一般无需修改
 // ────────────────────────────────────────────────────────────────────
 
-const ROOT = path.resolve(new URL(".", import.meta.url).pathname, "..");
+const ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
 const SRC = path.join(ROOT, "apps/mobile/src/assets/chat-doodle.svg");
 const OUT_LIGHT = path.join(
   ROOT,
@@ -67,10 +68,15 @@ const OUT_DARK = path.join(ROOT, "apps/mobile/src/assets/chat-doodle-dark.png");
 const svgRaw = readFileSync(SRC, "utf8");
 
 function bake(stroke, opacity) {
-  return svgRaw.replace(
-    /stroke="currentColor"/g,
-    `stroke="${stroke}" stroke-opacity="${opacity}"`
-  );
+  return svgRaw
+    .replace(
+      /stroke="currentColor"/g,
+      `stroke="${stroke}" stroke-opacity="${opacity}"`
+    )
+    .replace(
+      /fill="currentColor"/g,
+      `fill="${stroke}" fill-opacity="${opacity}"`
+    );
 }
 
 async function render(svgString, outPath) {

@@ -33,6 +33,16 @@ target 'Mesh' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  # react-native-ios-utilities is a direct dependency of @mushroom/mobile, so
+  # RN autolinking provides its pod and codegen generates the RNIUtilitiesSpec
+  # headers. It is NOT published to the CocoaPods trunk source, but autolinking
+  # resolves it from the installed npm package's podspec.
+
+  # Firebase's Swift pod (FirebaseCoreInternal) imports GoogleUtilities from
+  # Swift, which requires GoogleUtilities (and the pod importing it) to generate
+  # module maps. Enable modular headers only for these two targets — a global
+  # `use_modular_headers!` or `use_frameworks!` would break JCore/JPush (their
+  # podspecs do not declare static_framework).
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
 
