@@ -38,7 +38,7 @@ function resolveApiBaseUrl(): string {
     return "http://127.0.0.1:9100";
   }
 
-  return "https://mesh.outland.top";
+  return "http://118.25.26.5";
 }
 
 function getDefaultApiBaseUrl(): string {
