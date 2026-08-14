@@ -8,6 +8,12 @@ export {
 } from "./storage-preferences";
 export { shouldAutoDownload } from "./should-auto-download";
 export {
+  getAutoSaveToAlbumEnabled,
+  setAutoSaveToAlbumEnabled,
+  subscribeAutoSaveToAlbumEnabled,
+  useAutoSaveToAlbumEnabled
+} from "./save-to-album-preference";
+export {
   AUTO_DOWNLOAD_SIZE_LIMITS,
   getAutoDownloadSizeLimit
 } from "./auto-download-limits";

@@ -7,6 +7,7 @@ FROM base AS builder
 
 # Dependency manifests (leverage Docker layer cache)
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml tsconfig.base.json ./
+COPY patches/ ./patches/
 COPY server/package.json server/tsconfig.json server/.npmrc ./server/
 COPY packages/shared/package.json ./packages/shared/
 RUN pnpm install --filter @mushroom/server... --frozen-lockfile --ignore-scripts
@@ -25,6 +26,7 @@ ENV NODE_ENV=production
 
 # Workspace metadata needed by pnpm deploy
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
+COPY patches/ ./patches/
 COPY server/package.json server/.npmrc ./server/
 COPY packages/shared/package.json ./packages/shared/
 

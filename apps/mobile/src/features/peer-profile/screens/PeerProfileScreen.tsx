@@ -263,7 +263,7 @@ export function PeerProfileScreen() {
             />
           </Pressable>
           <View style={styles.chatInfoHeroNameRow}>
-            <Text numberOfLines={1} style={styles.chatInfoHeroNameCenter}>
+            <Text numberOfLines={2} style={styles.chatInfoHeroNameCenter}>
               {displayName}
             </Text>
             {genderIcon ? (
@@ -275,9 +275,7 @@ export function PeerProfileScreen() {
             ) : null}
           </View>
           {accountName ? (
-            <Text numberOfLines={1} style={styles.chatInfoHeroSubtitle}>
-              {accountName}
-            </Text>
+            <Text style={styles.chatInfoHeroSubtitle}>{accountName}</Text>
           ) : (
             <Text
               numberOfLines={1}

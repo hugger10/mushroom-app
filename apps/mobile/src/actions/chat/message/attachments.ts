@@ -18,6 +18,8 @@ import {
 } from "../../../platform/native-pickers";
 import { compressImageForUpload } from "../../../media/compressImage";
 import { extractVideoThumbnail } from "../../../media/extractVideoThumbnail";
+import { saveToAlbum } from "../../../platform/save-to-album";
+import { getAutoSaveToAlbumEnabled } from "../../../features/storage/save-to-album-preference";
 import {
   setAttachmentProgress,
   clearAttachmentProgress
@@ -148,6 +150,23 @@ export function createAttachmentActions(ctx: MessageActionsCtx) {
     state.setPendingImageAsset(null);
     state.setImagePreviewSendTopRight(false);
     state.setSendImageAsOriginal(false);
+
+    // 拍照 / 录像发送后自动保存到系统相册（设置开关默认开启）。
+    // fire-and-forget：不阻塞发送流程；静默失败，仅记日志。
+    if (
+      (asset.source === "camera" || asset.source === "quick-video") &&
+      getAutoSaveToAlbumEnabled()
+    ) {
+      void saveToAlbum(asset.uri)
+        .then(result => {
+          if (!result.success) {
+            log
+              .scope("mobile")
+              .warn("auto save captured media to album failed", result.error);
+          }
+        })
+        .catch(() => undefined);
+    }
 
     try {
       await processAndSendAttachmentAsset(

@@ -72,7 +72,7 @@ flowchart LR
 | 全量同步   | `GET /auth/contacts` + `GET /auth/blocks`      | 当前**全量返回 normal**；客户端本地 diff 幂等                                    |
 | 通讯录匹配 | `POST /auth/contacts/match` body `{phones:[]}` | 上限 500 条 E.164；命中 `user_phone_identity`                                    |
 | 单号查询   | `POST /auth/contacts/lookup-phone`             | 返回 `is_already_contact` 标记                                                   |
-| 搜索用户   | `POST /auth/search`                            | 用户名 / 手机号                                                                  |
+| 搜索用户   | `GET /auth/search`                             | `mode=phone` 整号精确；`mode=username` 用户名子串（`default_country_code=+86`）  |
 
 ### 3.1 调用入口
 

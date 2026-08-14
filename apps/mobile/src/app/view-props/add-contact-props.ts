@@ -23,7 +23,8 @@ export function buildAddContactProps(params: {
         phoneE164: input.phoneE164,
         defaultCountryCode: input.defaultCountryCode
       }),
-    onSearchUsers: (keyword: string) => accountActions.searchUsers(keyword),
+    onSearchUsers: (keyword: string, options) =>
+      accountActions.searchUsers(keyword, options),
     onAddContact: input =>
       accountActions.addContact({
         userId: input.userId,

@@ -18,4 +18,5 @@ export * from "./reaction-format";
 export * from "./read-receipt-gate";
 export * from "./system-message";
 export * from "./typing-preview";
+export * from "./user-search";
 export * from "./voice-waveform";

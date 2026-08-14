@@ -2,6 +2,7 @@ import { Alert, Linking } from "react-native";
 import type {
   ContactListItem,
   UserProfile,
+  UserSearchMode,
   UserSearchResult
 } from "@mushroom/shared";
 import log from "../../utils/log";
@@ -81,9 +82,14 @@ export function createContactActions(params: {
     void runAction("", () => mobileAppController.deleteContact(userId), "");
   }
 
-  async function searchUsers(keyword: string): Promise<UserSearchResult[]> {
+  async function searchUsers(
+    keyword: string,
+    options?: { mode?: UserSearchMode }
+  ): Promise<UserSearchResult[]> {
     const result = await mobileServerApi.searchUsers({
-      keyword: keyword.trim()
+      keyword: keyword.trim(),
+      default_country_code: "+86",
+      mode: options?.mode
     });
     return result.data;
   }

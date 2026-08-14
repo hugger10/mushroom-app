@@ -3,7 +3,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { UserSearchResult } from "@mushroom/shared";
-import { SEARCH_KEYWORD_MAX_LENGTH } from "@mushroom/shared";
+import {
+  compactPhone,
+  isValidPhoneInput,
+  SEARCH_KEYWORD_MAX_LENGTH
+} from "@mushroom/shared";
 import { searchUser, saveContact } from "../../http/api";
 import type { ContactListItem } from "../../types/user";
 import { normalizeAvatarUrl } from "../../utils/display";
@@ -16,6 +20,8 @@ interface AddContactDialogProps {
   onContactAdded: () => void;
 }
 
+type TabKey = "phone" | "username";
+
 export function AddContactDialog({
   visible,
   onClose,
@@ -23,7 +29,10 @@ export function AddContactDialog({
   onContactAdded
 }: AddContactDialogProps) {
   const { t } = useTranslation();
-  const [keyword, setKeyword] = useState("");
+  const [tab, setTab] = useState<TabKey>("phone");
+  const [phoneKeyword, setPhoneKeyword] = useState("");
+  const [usernameKeyword, setUsernameKeyword] = useState("");
+  const [phoneInvalid, setPhoneInvalid] = useState(false);
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<UserSearchResult[]>([]);
   const [searched, setSearched] = useState(false);
@@ -37,22 +46,27 @@ export function AddContactDialog({
 
   useEffect(() => {
     if (!visible) {
-      setKeyword("");
+      setPhoneKeyword("");
+      setUsernameKeyword("");
+      setPhoneInvalid(false);
       setResults([]);
       setSearched(false);
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+        debounceRef.current = null;
+      }
     }
   }, [visible]);
 
-  const doSearch = useCallback(async (query: string) => {
-    if (query.trim().length < 2) {
-      setResults([]);
-      setSearched(false);
-      return;
-    }
+  const doSearch = useCallback(async (query: string, mode: TabKey) => {
     setSearching(true);
     setSearched(true);
     try {
-      const res = await searchUser({ q: query.trim() });
+      const res = await searchUser({
+        q: query,
+        mode,
+        default_country_code: "+86"
+      });
       setResults(res.data || []);
     } catch {
       setResults([]);
@@ -61,23 +75,49 @@ export function AddContactDialog({
     }
   }, []);
 
-  const handleInputChange = useCallback(
-    (value: string) => {
-      setKeyword(value);
+  const scheduleSearch = useCallback(
+    (query: string, mode: TabKey) => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-      if (value.trim().length >= 2) {
-        debounceRef.current = setTimeout(() => {
-          void doSearch(value);
-        }, 300);
-      } else {
+      if (!query) {
         setResults([]);
         setSearched(false);
+        setSearching(false);
+        return;
       }
+      if (mode === "phone") {
+        const valid = isValidPhoneInput(query);
+        setPhoneInvalid(!valid);
+        if (!valid) {
+          setResults([]);
+          setSearched(false);
+          setSearching(false);
+          return;
+        }
+      }
+      debounceRef.current = setTimeout(() => {
+        void doSearch(query, mode);
+      }, 300);
     },
     [doSearch]
   );
+
+  const handlePhoneChange = (value: string) => {
+    setPhoneKeyword(value);
+    scheduleSearch(compactPhone(value), "phone");
+  };
+
+  const handleUsernameChange = (value: string) => {
+    setUsernameKeyword(value);
+    if (value.trim().length >= 2) {
+      scheduleSearch(value.trim(), "username");
+    } else {
+      setResults([]);
+      setSearched(false);
+      setSearching(false);
+    }
+  };
 
   const handleAddContact = useCallback(
     async (userId: number) => {
@@ -111,19 +151,65 @@ export function AddContactDialog({
       destroyOnHidden
     >
       <div className="im-add-contact-body">
-        <Input
-          className="im-add-contact-search"
-          placeholder={t("addContact.placeholder")}
-          prefix={<SearchOutlined />}
-          value={keyword}
-          onChange={e => handleInputChange(e.target.value)}
-          allowClear
-          maxLength={SEARCH_KEYWORD_MAX_LENGTH}
-          autoFocus
-        />
+        <div className="im-add-contact-tabs">
+          <button
+            type="button"
+            className={`im-add-contact-tab${tab === "phone" ? " im-add-contact-tab-active" : ""}`}
+            onClick={() => {
+              setTab("phone");
+              setResults([]);
+              setSearched(false);
+              setSearching(false);
+              setPhoneInvalid(false);
+            }}
+          >
+            {t("addContact.tabPhone")}
+          </button>
+          <button
+            type="button"
+            className={`im-add-contact-tab${tab === "username" ? " im-add-contact-tab-active" : ""}`}
+            onClick={() => {
+              setTab("username");
+              setResults([]);
+              setSearched(false);
+              setSearching(false);
+              setPhoneInvalid(false);
+            }}
+          >
+            {t("addContact.tabUsername")}
+          </button>
+        </div>
+
+        {tab === "phone" ? (
+          <Input
+            className="im-add-contact-search"
+            placeholder={t("addContact.phonePlaceholder")}
+            prefix={<SearchOutlined />}
+            value={phoneKeyword}
+            onChange={e => handlePhoneChange(e.target.value)}
+            allowClear
+            maxLength={16}
+            autoFocus
+          />
+        ) : (
+          <Input
+            className="im-add-contact-search"
+            placeholder={t("addContact.usernamePlaceholder")}
+            prefix={<SearchOutlined />}
+            value={usernameKeyword}
+            onChange={e => handleUsernameChange(e.target.value)}
+            allowClear
+            maxLength={SEARCH_KEYWORD_MAX_LENGTH}
+            autoFocus
+          />
+        )}
 
         <div className="im-add-contact-results">
-          {searching ? (
+          {phoneInvalid ? (
+            <div className="im-add-contact-empty">
+              {t("addContact.phoneInvalid")}
+            </div>
+          ) : searching ? (
             <div className="im-add-contact-loading">
               <Skeleton active avatar paragraph={{ rows: 1 }} />
             </div>

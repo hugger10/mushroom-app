@@ -64,6 +64,8 @@ function applyCameraResolution(
   return "cancelled";
 }
 
+export type PickedMediaSource = "gallery" | "camera" | "quick-video";
+
 export type PickedMediaAsset = {
   uri: string;
   name: string;
@@ -72,10 +74,13 @@ export type PickedMediaAsset = {
   width?: number;
   height?: number;
   durationMs?: number;
+  /** 媒体来源：决定发送时是否需要自动保存到相册。 */
+  source?: PickedMediaSource;
 };
 
 function normalizeMediaResult(
-  result: Awaited<ReturnType<typeof launchImageLibrary>>
+  result: Awaited<ReturnType<typeof launchImageLibrary>>,
+  source: PickedMediaSource
 ): PickedMediaAsset | null {
   if (result.didCancel) {
     return null;
@@ -103,7 +108,8 @@ function normalizeMediaResult(
     durationMs:
       typeof asset.duration === "number"
         ? Math.round(asset.duration * 1000)
-        : undefined
+        : undefined,
+    source
   };
 }
 
@@ -116,7 +122,7 @@ export async function pickFromGallery(): Promise<PickedMediaAsset | null> {
     mediaType: "mixed",
     selectionLimit: 1
   });
-  return normalizeMediaResult(result);
+  return normalizeMediaResult(result, "gallery");
 }
 
 /**
@@ -135,7 +141,7 @@ export async function pickFromCamera(): Promise<PickedMediaAsset | null> {
     cameraType: "back",
     saveToPhotos: false
   });
-  return normalizeMediaResult(result);
+  return normalizeMediaResult(result, "camera");
 }
 
 export async function pickAvatarImage() {

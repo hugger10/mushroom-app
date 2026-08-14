@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from "react";
-import type { UserSearchResult } from "@mushroom/shared";
+import type { UserSearchMode, UserSearchResult } from "@mushroom/shared";
 import type { AddressBookPermissionState } from "../../platform/address-book";
 import type { AddressBookMatchCacheEntry } from "../../data/address-book-match-cache";
 
@@ -16,7 +16,10 @@ export type AddContactProps = {
     phoneE164: string;
     user: UserSearchResult | null;
   }>;
-  onSearchUsers: (keyword: string) => Promise<UserSearchResult[]>;
+  onSearchUsers: (
+    keyword: string,
+    options?: { mode?: UserSearchMode }
+  ) => Promise<UserSearchResult[]>;
   onAddContact: (input: {
     userId: number;
     remarkName?: string;

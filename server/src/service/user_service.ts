@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
 import type { ConversationSyncMessage } from "@mushroom/shared";
-import { PASSWORD_MAX_LENGTH } from "@mushroom/shared";
+import {
+  classifyUserSearchInput,
+  isValidPhoneInput,
+  PASSWORD_MAX_LENGTH,
+  type UserSearchMode
+} from "@mushroom/shared";
 import pg from "../db/pg";
 import { BusinessError } from "../handler/business_error";
 import AuthAuditRepository from "../repository/auth_audit_repository";
@@ -269,20 +274,50 @@ class UserService {
     };
   }
 
-  async searchUsers(keyword: string, selfId?: number): Promise<User[]> {
+  async searchUsers(
+    keyword: string,
+    selfId?: number,
+    options?: { mode?: UserSearchMode; defaultCountryCode?: string }
+  ): Promise<User[]> {
     const normalizedKeyword = keyword.trim();
+    if (!normalizedKeyword) {
+      return [];
+    }
+
+    const mode =
+      options?.mode ??
+      (classifyUserSearchInput(normalizedKeyword) === "username"
+        ? "username"
+        : "phone");
+
+    if (mode === "phone") {
+      // 手机号整号精确匹配：前端已做格式校验，这里兜底，避免短串 / 非法串查库。
+      if (!selfId || !isValidPhoneInput(normalizedKeyword)) {
+        return [];
+      }
+      try {
+        const result = await ContactService.lookupUserByPhone(
+          selfId,
+          normalizedKeyword,
+          options?.defaultCountryCode
+        );
+        return result.matched && result.user ? [result.user] : [];
+      } catch {
+        return [];
+      }
+    }
+
     const users = await UserRepository.search(normalizedKeyword, selfId);
     if (!selfId) {
       return users;
     }
 
-    const looksLikePhone = /^[+\d][\d\s-]*$/.test(normalizedKeyword);
     const filtered: User[] = [];
     for (const user of users) {
       const allowed = await ContactService.canDiscoverUser(
         selfId,
         user.id,
-        looksLikePhone ? "phone" : "username"
+        "username"
       );
       if (allowed) {
         filtered.push(user);

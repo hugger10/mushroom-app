@@ -854,6 +854,41 @@
 
 /* ── Add Contact Dialog ── */
 
+.im-add-contact-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 12px;
+  background: rgba(148, 163, 184, 0.14);
+}
+
+.im-add-contact-tab {
+  flex: 1;
+  height: 34px;
+  border: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--im-text-soft);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.im-add-contact-tab:hover {
+  color: var(--im-text);
+}
+
+.im-add-contact-tab-active {
+  background: #fff;
+  color: var(--im-accent);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="dark"] .im-add-contact-tab-active {
+  background: #1f2c34;
+}
+
 .im-add-contact-body {
   display: flex;
   flex-direction: column;

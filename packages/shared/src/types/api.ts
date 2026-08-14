@@ -260,6 +260,15 @@ export interface LookupContactByPhoneResponse {
 export interface SearchUsersParams {
   keyword?: string;
   q?: string;
+  /**
+   * 指定搜索模式：`phone` 仅做手机号整号精确匹配，`username` 仅做用户名
+   * 子串匹配。缺省时服务端按输入形态自动判断（纯数字 → phone，否则 username）。
+   */
+  mode?: "phone" | "username";
+  /**
+   * 手机号精确匹配时的默认国家/地区码（E.164 归一化用），如 "+86"。
+   */
+  default_country_code?: string;
 }
 
 export interface ContactRecord extends Contact {}

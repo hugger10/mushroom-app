@@ -17,6 +17,7 @@ import {
 import NotificationSettingsService from "../service/notification_settings_service";
 import PrivacyService from "../service/privacy_service";
 import UserService from "../service/user_service";
+import ContactService from "../service/contact_service";
 import { wrapAsync } from "../handler/response_wrapper";
 import { BusinessError } from "../handler/business_error";
 import { toUserProfile, toUserSearchResult } from "../utils/dto";
@@ -120,8 +121,25 @@ export class ProfileController {
       if (!keyword) {
         throw new BusinessError("Keyword is required");
       }
-      const users = await UserService.searchUsers(keyword, userId);
-      return users.map(toUserSearchResult);
+      const mode = optionalQueryString(req, "mode");
+      const defaultCountryCode = optionalQueryString(
+        req,
+        "default_country_code"
+      );
+      const users = await UserService.searchUsers(keyword, userId, {
+        mode: mode === "phone" || mode === "username" ? mode : undefined,
+        defaultCountryCode
+      });
+      const savedContactIds = new Set(
+        await ContactService.listSavedContactIds(
+          userId,
+          users.map(user => user.id)
+        )
+      );
+      return users.map(user => ({
+        ...toUserSearchResult(user),
+        is_already_contact: savedContactIds.has(user.id)
+      }));
     }
   );
 

@@ -66,6 +66,13 @@ class ContactService {
     return ContactRepository.isSavedContact(userId, targetUserId);
   }
 
+  async listSavedContactIds(
+    ownerUserId: number,
+    candidateUserIds: number[]
+  ): Promise<number[]> {
+    return ContactRepository.listSavedContactIds(ownerUserId, candidateUserIds);
+  }
+
   /**
    * 判断 searcher 是否可以通过 username / phone 发现 target。
    * 综合考虑双向 block、target 的隐私设置。

@@ -37,8 +37,8 @@
     "vite": "^7.1.2"
   },
   "build": {
-    "appId": "com.iauto.mushroom",
-    "productName": "Mushroom",
+    "appId": "com.outland.mushroom",
+    "productName": "Mesh",
     "directories": {
       "buildResources": "resources"
     },

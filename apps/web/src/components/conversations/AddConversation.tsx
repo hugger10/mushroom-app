@@ -12,6 +12,7 @@ import { UserAvatar } from "../avatars/UserAvatar";
 import { searchUser } from "../../http/api";
 import type { UserSearchResult } from "@mushroom/shared";
 import {
+  classifyUserSearchInput,
   GROUP_NAME_MAX_LENGTH,
   SEARCH_KEYWORD_MAX_LENGTH
 } from "@mushroom/shared";
@@ -114,7 +115,10 @@ export default function AddConversation({
   const doRemoteSearch = useCallback(async (keyword: string) => {
     setIsSearching(true);
     try {
-      const res = await searchUser({ q: keyword });
+      const res = await searchUser({
+        q: keyword,
+        default_country_code: "+86"
+      });
       setRemoteResults(res.data || []);
     } catch {
       setRemoteResults([]);
@@ -129,7 +133,10 @@ export default function AddConversation({
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-      if (value.trim().length >= 2) {
+      if (
+        value.trim().length >= 2 &&
+        classifyUserSearchInput(value) !== "too-short"
+      ) {
         debounceRef.current = setTimeout(() => {
           void doRemoteSearch(value.trim());
         }, 300);

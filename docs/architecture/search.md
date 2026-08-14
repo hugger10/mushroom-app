@@ -70,7 +70,9 @@ flowchart LR
 
 1. UI 拿到 keyword（min 2，debounce 300ms）→ `searchUser({ q })`。
 2. 走 `GET /auth/search?q=...`。
-3. `UserService.searchUsers` → `UserRepository.search` 执行 `SELECT ... WHERE username ILIKE $1 OR phone ILIKE $1 ORDER BY created_at DESC LIMIT 10`。
+3. `UserService.searchUsers` 按输入形态分流：
+   - `mode=phone`（或输入为纯数字/带 `+` 号码，自动判断）：E.164 归一化后走 `user_phone_identity.phone_e164` **整号精确匹配**（复用 lookup-phone 逻辑），不做用户名/号码子串模糊；前端与服务端双重校验 7-15 位，短串（如 1、2、138）不查库。
+   - `mode=username`（含字母输入）：`UserRepository.search` 执行 `SELECT ... WHERE username ILIKE $1 ... LIMIT 10`，仅用户名子串模糊，不再匹配手机号。
 4. 命中后逐条 `canDiscoverUser(self, target, mode)`：检查双向 block + privacy（`discoverable_by_username/phone` ∈ {0,1,2}）。
 5. 返回 `UserSearchResult[]`（含 `can_open_direct?`、`is_already_contact?`）。
 
@@ -158,6 +160,11 @@ flowchart LR
 | 方法 | 路径                       | 鉴权 | 说明                       |
 | ---- | -------------------------- | ---- | -------------------------- |
 | GET  | `/auth/search?q=&keyword=` | JWT  | 用户搜索，LIMIT 10，无分页 |
+
+可选参数：
+
+- `mode=phone|username`：显式指定手机号精确匹配 / 用户名子串匹配；缺省按输入形态自动判断。
+- `default_country_code=+86`：手机号精确匹配时 E.164 归一化的默认国家/地区码（移动端与 web 均传 +86）。
 
 请求/响应 DTO 见 `packages/shared/src/types/api.ts:219-251`。
 

@@ -673,7 +673,8 @@ export function buildChatScreenProps(params: {
         size,
         width: 720,
         height: 1280,
-        durationMs
+        durationMs,
+        source: "quick-video"
       };
       state.setImagePreviewSendTopRight(true);
       state.setPendingImageAsset(asset);

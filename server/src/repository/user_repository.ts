@@ -161,7 +161,7 @@ class UserRepository {
         last_login_at,
         status
       FROM users
-      WHERE (username ILIKE $1 ESCAPE '\\' OR phone ILIKE $1 ESCAPE '\\')
+      WHERE username ILIKE $1 ESCAPE '\\'
       ${selfId ? "AND id != $2" : ""}
       ORDER BY created_at DESC
       LIMIT 10

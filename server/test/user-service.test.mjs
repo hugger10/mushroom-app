@@ -17,6 +17,7 @@ const userDeviceServiceModule = require("../dist/server/src/service/user_device_
 const presenceServiceModule = require("../dist/server/src/service/presence_service.js");
 const userRepositoryModule = require("../dist/server/src/repository/user_repository.js");
 const contactRepositoryModule = require("../dist/server/src/repository/contact_repository.js");
+const contactServiceModule = require("../dist/server/src/service/contact_service.js");
 const wsModule = require("../dist/server/src/websocket/index.js");
 const redisModule = require("../dist/server/src/cache/redis.js");
 
@@ -33,6 +34,7 @@ const UserDeviceService = userDeviceServiceModule.default;
 const PresenceService = presenceServiceModule.default;
 const UserRepository = userRepositoryModule.default;
 const ContactRepository = contactRepositoryModule.default;
+const ContactService = contactServiceModule.default;
 const { wsServer } = wsModule;
 const redis = redisModule.getRedis();
 
@@ -109,6 +111,8 @@ const originalDispatchToUser = wsServer.dispatchToUser;
 const originalGetPresenceSummary = wsServer.getPresenceSummary;
 const originalGetOnlineDeviceIds = wsServer.getOnlineDeviceIds;
 const originalDisconnectUserDevices = wsServer.disconnectUserDevices;
+const originalLookupUserByPhone = ContactService.lookupUserByPhone;
+const originalCanDiscoverUser = ContactService.canDiscoverUser;
 
 test.afterEach(() => {
   AuthAuditRepository.insert = originalAuthAuditInsert;
@@ -146,6 +150,8 @@ test.afterEach(() => {
   wsServer.getPresenceSummary = originalGetPresenceSummary;
   wsServer.getOnlineDeviceIds = originalGetOnlineDeviceIds;
   wsServer.disconnectUserDevices = originalDisconnectUserDevices;
+  ContactService.lookupUserByPhone = originalLookupUserByPhone;
+  ContactService.canDiscoverUser = originalCanDiscoverUser;
 });
 
 test.after(async () => {
@@ -770,4 +776,108 @@ test("getSecurityEvents maps audit records to API response shape", async () => {
       }
     ]
   });
+});
+
+test("searchUsers with phone mode performs exact E.164 lookup", async () => {
+  const user = {
+    id: 42,
+    username: "bob",
+    nickname: "Bob",
+    avatar_url: "",
+    signature: "",
+    gender: 0
+  };
+  let capturedArgs = null;
+  ContactService.lookupUserByPhone = async (
+    selfId,
+    rawPhone,
+    defaultCountryCode
+  ) => {
+    capturedArgs = { selfId, rawPhone, defaultCountryCode };
+    return {
+      matched: true,
+      phoneE164: "+8613800138000",
+      user,
+      isAlreadyContact: true
+    };
+  };
+
+  const result = await UserService.searchUsers("13800138000", 7, {
+    mode: "phone",
+    defaultCountryCode: "+86"
+  });
+
+  assert.deepEqual(capturedArgs, {
+    selfId: 7,
+    rawPhone: "13800138000",
+    defaultCountryCode: "+86"
+  });
+  assert.deepEqual(result, [user]);
+});
+
+test("searchUsers phone mode returns empty for short / invalid numbers", async () => {
+  let lookedUp = false;
+  ContactService.lookupUserByPhone = async () => {
+    lookedUp = true;
+    return {
+      matched: false,
+      phoneE164: "",
+      user: null,
+      isAlreadyContact: false
+    };
+  };
+
+  const short = await UserService.searchUsers("12", 7, { mode: "phone" });
+  const withSign = await UserService.searchUsers("+86", 7, { mode: "phone" });
+
+  assert.deepEqual(short, []);
+  assert.deepEqual(withSign, []);
+  assert.equal(lookedUp, false);
+});
+
+test("searchUsers username mode searches username substring with discovery filter", async () => {
+  const users = [
+    { id: 11, username: "alice", nickname: "Alice", avatar_url: "" },
+    { id: 22, username: "alice2", nickname: "Alice2", avatar_url: "" }
+  ];
+  let searchKeyword = null;
+  const filteredIds = [];
+  UserRepository.search = async keyword => {
+    searchKeyword = keyword;
+    return users;
+  };
+  ContactService.canDiscoverUser = async (selfId, targetUserId) => {
+    filteredIds.push(targetUserId);
+    return targetUserId !== 22;
+  };
+
+  const result = await UserService.searchUsers("alice", 7, {
+    mode: "username"
+  });
+
+  assert.equal(searchKeyword, "alice");
+  assert.deepEqual(filteredIds, [11, 22]);
+  assert.equal(result.length, 1);
+  assert.equal(result[0].id, 11);
+});
+
+test("searchUsers auto-classifies digits as phone and letters as username", async () => {
+  let phoneLookedUp = false;
+  ContactService.lookupUserByPhone = async () => {
+    phoneLookedUp = true;
+    return {
+      matched: false,
+      phoneE164: "",
+      user: null,
+      isAlreadyContact: false
+    };
+  };
+  UserRepository.search = async () => [];
+
+  await UserService.searchUsers("13800138000", 7);
+  assert.equal(phoneLookedUp, true);
+
+  phoneLookedUp = false;
+  await UserService.searchUsers("alice", 7);
+  assert.equal(phoneLookedUp, false);
 });

@@ -11,6 +11,7 @@ const authControllerModule = require("../dist/server/src/controller/auth_control
 const callControllerModule = require("../dist/server/src/controller/call_controller.js");
 const contactControllerModule = require("../dist/server/src/controller/contact_controller.js");
 const deviceControllerModule = require("../dist/server/src/controller/device_controller.js");
+const profileControllerModule = require("../dist/server/src/controller/profile_controller.js");
 const contactServiceModule = require("../dist/server/src/service/contact_service.js");
 const userDeviceServiceModule = require("../dist/server/src/service/user_device_service.js");
 const userServiceModule = require("../dist/server/src/service/user_service.js");
@@ -23,6 +24,7 @@ const { AuthController } = authControllerModule;
 const { CallController } = callControllerModule;
 const { ContactController } = contactControllerModule;
 const { DeviceController } = deviceControllerModule;
+const { ProfileController } = profileControllerModule;
 const ContactService = contactServiceModule.default;
 const UserDeviceService = userDeviceServiceModule.default;
 const UserService = userServiceModule.default;
@@ -36,8 +38,9 @@ const originals = {
   getGroupRoomConfig: CallRoomService.getGroupRoomConfig,
   registerLoginDevice: UserDeviceService.registerLoginDevice,
   logoutAllDevices: UserDeviceService.logoutAllDevices,
-  disableDevice: UserDeviceService.disableDevice,
   createUser: UserService.createUser,
+  searchUsers: UserService.searchUsers,
+  listSavedContactIds: ContactService.listSavedContactIds,
   findUserByUsername: UserService.findUserByUsername,
   markLogin: UserService.markLogin,
   changePassword: UserService.changePassword,
@@ -123,6 +126,8 @@ test.afterEach(() => {
   UserService.markLogin = originals.markLogin;
   UserService.changePassword = originals.changePassword;
   UserService.getSecurityEvents = originals.getSecurityEvents;
+  UserService.searchUsers = originals.searchUsers;
+  ContactService.listSavedContactIds = originals.listSavedContactIds;
   ContactService.lookupUserByPhone = originals.lookupUserByPhone;
 });
 
@@ -504,4 +509,35 @@ test("lookupContactByPhone rejects when phone_e164 is missing", async () => {
       }),
     /phone_e164 is required/
   );
+});
+
+test("search marks already-saved contacts per result", async () => {
+  const users = [
+    { id: 11, username: "alice", nickname: "Alice", avatar_url: "" },
+    { id: 22, username: "bob", nickname: "Bob", avatar_url: "" },
+    { id: 33, username: "carol", nickname: "Carol", avatar_url: "" }
+  ];
+  let capturedOwner = null;
+  let capturedCandidates = null;
+  UserService.searchUsers = async () => users;
+  ContactService.listSavedContactIds = async (ownerUserId, candidates) => {
+    capturedOwner = ownerUserId;
+    capturedCandidates = candidates;
+    return [11, 33].filter(id => candidates.includes(id));
+  };
+
+  const result = await runWrapped(ProfileController.search, {
+    query: { q: "a" },
+    JwtPayload: { userId: 7 }
+  });
+
+  assert.equal(capturedOwner, 7);
+  assert.deepEqual(capturedCandidates, [11, 22, 33]);
+  assert.equal(result.length, 3);
+  assert.equal(result[0].user_id, 11);
+  assert.equal(result[0].is_already_contact, true);
+  assert.equal(result[1].user_id, 22);
+  assert.equal(result[1].is_already_contact, false);
+  assert.equal(result[2].user_id, 33);
+  assert.equal(result[2].is_already_contact, true);
 });

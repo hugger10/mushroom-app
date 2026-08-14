@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Switch, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { PressableRow } from "../../../hooks/usePressAnimation";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -10,6 +10,7 @@ import { useAppTheme } from "../../../styles/app-styles";
 import type { AppStackParamList } from "../../../types/navigation";
 import { AccountPageShell } from "../../account/AccountPageShell";
 import { useMediaAutoDownloadPreferences } from "../storage-preferences";
+import { useAutoSaveToAlbumEnabled } from "../save-to-album-preference";
 import {
   MEDIA_AUTO_DOWNLOAD_POLICIES,
   MEDIA_CATEGORIES,
@@ -39,6 +40,8 @@ export function StorageDataOverviewScreen() {
     useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const { usage, loading } = useStorageUsage();
   const { preferences, update } = useMediaAutoDownloadPreferences();
+  const { enabled: autoSaveToAlbum, update: updateAutoSaveToAlbum } =
+    useAutoSaveToAlbumEnabled();
   const [activeCategory, setActiveCategory] = useState<MediaCategory | null>(
     null
   );
@@ -155,6 +158,54 @@ export function StorageDataOverviewScreen() {
               </PressableRow>
             </View>
           ))}
+        </View>
+
+        <Text style={styles.accountSecuritySectionLabel}>
+          {t("me.storage.sectionCapture")}
+        </Text>
+        <View style={styles.accountSecurityListSection}>
+          <PressableRow
+            onPress={() => updateAutoSaveToAlbum(!autoSaveToAlbum)}
+            style={styles.accountSecurityListRow}
+            testID="auto-save-to-album"
+          >
+            <View
+              style={[
+                styles.accountSecurityListIcon,
+                {
+                  backgroundColor:
+                    theme.mode === "dark"
+                      ? "rgba(255,255,255,0.06)"
+                      : theme.colors.surfaceMuted
+                }
+              ]}
+            >
+              <Icon
+                name="camera-outline"
+                size={20}
+                color={theme.colors.accent}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.accountSecurityListTitle}>
+                {t("me.storage.autoSaveToAlbum")}
+              </Text>
+              <Text style={styles.accountSecurityHeroSub}>
+                {t("me.storage.autoSaveToAlbumDescription")}
+              </Text>
+            </View>
+            <Switch
+              value={autoSaveToAlbum}
+              onValueChange={updateAutoSaveToAlbum}
+              trackColor={{
+                false: theme.colors.surfaceMuted,
+                true: theme.colors.accentMuted
+              }}
+              thumbColor={
+                autoSaveToAlbum ? theme.colors.accent : theme.colors.textSoft
+              }
+            />
+          </PressableRow>
         </View>
       </ScrollView>
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  classifyUserSearchInput,
   parseGroupConversationSettings,
   type UserSearchResult
 } from "@mushroom/shared";
@@ -303,11 +304,20 @@ export default function GroupManageModal({
       setSearching(false);
       return;
     }
+    if (classifyUserSearchInput(keyword) === "too-short") {
+      searchTokenRef.current += 1;
+      setSearchResults([]);
+      setSearching(false);
+      return;
+    }
     setSearching(true);
     const token = ++searchTokenRef.current;
     searchTimerRef.current = setTimeout(async () => {
       try {
-        const res = await searchUser({ keyword });
+        const res = await searchUser({
+          keyword,
+          default_country_code: "+86"
+        });
         if (token !== searchTokenRef.current) return;
         setSearchResults(Array.isArray(res?.data) ? res.data : []);
       } catch (error) {

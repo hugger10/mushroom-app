@@ -18,6 +18,7 @@ import {
 import { getReadableErrorMessage } from "../utils/errorMessage";
 import { syncRelationshipChanges } from "../utils/relationshipSync";
 import { mapUserSearchResults } from "../utils/userSearch";
+import { classifyUserSearchInput } from "@mushroom/shared";
 
 function getConversationSortTime(conversation: Conversation) {
   const value = new Date(conversation.last_message_time).getTime();
@@ -90,7 +91,11 @@ export function useConversation(
   };
 
   const handleSearchUser = async (keyword: string) => {
-    const { data } = await searchUser({ keyword });
+    if (classifyUserSearchInput(keyword) === "too-short") return [];
+    const { data } = await searchUser({
+      keyword,
+      default_country_code: "+86"
+    });
     if (!data || data.length === 0) return [];
     return mapUserSearchResults(data);
   };
