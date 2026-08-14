@@ -26,7 +26,7 @@ export function IconGlyph(props: {
     | "qr-scanner";
   active?: boolean;
   style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
+  textStyle?: TextStyle | TextStyle[] | false | null | undefined;
 }) {
   const { styles } = useAppTheme();
   const iconColor = props.active
