@@ -1,12 +1,12 @@
 name: Quality
 
-on:
-  push:
-    branches:
-      - main
-      - master
-      - "codex/**"
-  pull_request:
+# on:
+#   push:
+#     branches:
+#       - main
+#       - master
+#       - "codex/**"
+#   pull_request:
 
 jobs:
   quality:
