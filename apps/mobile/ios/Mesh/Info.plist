@@ -50,7 +50,11 @@
 	<array>
 		<string>FontAwesome.ttf</string>
 		<string>Ionicons.ttf</string>
+<<<<<<< HEAD
 		<string>Lucide.ttf</string>
+=======
+    <string>Lucide.ttf</string>
+>>>>>>> cdf6c2e1d6c6f251c33340adbde3db4f5b19eae8
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
