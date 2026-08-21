@@ -203,13 +203,26 @@ export const config = {
     xiaomiAppKey: readString("PUSH_XIAOMI_APP_KEY"),
     xiaomiAppSecret: readString("PUSH_XIAOMI_APP_SECRET"),
     xiaomiPackageName: readString("PUSH_XIAOMI_PACKAGE_NAME"),
-    xiaomiRegion: readString("PUSH_XIAOMI_REGION", "singapore"),
+    xiaomiRegion: readString("PUSH_XIAOMI_REGION", "china"),
+    xiaomiChannelId: readString("PUSH_XIAOMI_CHANNEL_ID"),
+    xiaomiTemplateId: readString("PUSH_XIAOMI_TEMPLATE_ID"),
     xiaomiJavaBin: readString("PUSH_XIAOMI_JAVA_BIN", "java"),
     xiaomiSdkDir: readString("PUSH_XIAOMI_SDK_DIR"),
     xiaomiHelperClasspath: readString(
       "PUSH_XIAOMI_HELPER_CLASSPATH",
       "server/tools/xiaomi/classes"
     ),
+    /**
+     * java helper 子进程超时（毫秒）。超时后 Node 会向进程发 SIGTERM，
+     * 日志中表现为 `killed:true` / exit code 143，通常是容器到小米
+     * API 出网卡死导致。出网故障时由 outbox 退避重试兜底。
+     */
+    xiaomiTimeoutMs: readNumber("PUSH_XIAOMI_TIMEOUT_MS", 20_000),
+    /**
+     * MiPush SDK 层重试次数。出网故障时重试会成倍放大等待时间（SDK 单次
+     * connect/read 超时叠加），默认降为 1 以快速失败，交给 outbox 退避重试。
+     */
+    xiaomiRetries: readNumber("PUSH_XIAOMI_RETRIES", 1),
     /**
      * APNs VoIP (PushKit) channel — delivers `call.invite` directly to iOS over
      * the dedicated VoIP topic so a killed/background app reliably wakes and

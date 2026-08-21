@@ -23,7 +23,8 @@ import {
   ProfileBirthdayEditScreen,
   ProfileGenderEditScreen,
   ProfileTextFieldEditScreen,
-  NotificationSettingsScreen
+  NotificationSettingsScreen,
+  ChatBackgroundScreen
 } from "../features/account";
 import {
   AddContactScreen,
@@ -309,6 +310,7 @@ export function MainNavigator(props: { controller: Controller }) {
           name="NotificationSettings"
           component={NotificationSettingsScreen}
         />
+        <Stack.Screen name="ChatBackground" component={ChatBackgroundScreen} />
         <Stack.Screen name="MyProfile" component={MyProfileScreen} />
         <Stack.Screen
           name="MyProfileFieldEdit"

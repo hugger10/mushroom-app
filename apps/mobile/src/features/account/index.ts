@@ -21,4 +21,5 @@ export { ProfileTextFieldEditScreen } from "./screens/ProfileTextFieldEditScreen
 export { ProfileGenderEditScreen } from "./screens/ProfileGenderEditScreen";
 export { ProfileBirthdayEditScreen } from "./screens/ProfileBirthdayEditScreen";
 export { NotificationSettingsScreen } from "./screens/NotificationSettingsScreen";
+export { ChatBackgroundScreen } from "./screens/ChatBackgroundScreen";
 export type { ProfileField, TextProfileField } from "./profile-fields";

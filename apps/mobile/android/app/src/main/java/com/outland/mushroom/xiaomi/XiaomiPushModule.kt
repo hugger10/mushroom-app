@@ -7,6 +7,9 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.xiaomi.mipush.sdk.MiPushClient
+import com.xiaomi.mipush.sdk.PushConfiguration
+import com.xiaomi.push.service.module.PushChannelRegion
 
 class XiaomiPushModule(
   reactContext: ReactApplicationContext
@@ -25,7 +28,9 @@ class XiaomiPushModule(
 
   @ReactMethod
   fun isAvailable(promise: Promise) {
-    promise.resolve(resolveMiPushClientClass() != null)
+    val appId = readMetaDataValue(APP_ID_META_DATA)
+    val appKey = readMetaDataValue(APP_KEY_META_DATA)
+    promise.resolve(!appId.isNullOrBlank() && !appKey.isNullOrBlank())
   }
 
   @ReactMethod
@@ -35,7 +40,7 @@ class XiaomiPushModule(
       configuration.putString("appId", readMetaDataValue(APP_ID_META_DATA))
       configuration.putString("appKey", readMetaDataValue(APP_KEY_META_DATA))
       configuration.putString("region", readMetaDataValue(REGION_META_DATA))
-      configuration.putBoolean("sdkAvailable", resolveMiPushClientClass() != null)
+      configuration.putBoolean("sdkAvailable", true)
       promise.resolve(configuration)
     } catch (error: Exception) {
       promise.reject("ERR_XIAOMI_CONFIG", error.message, error)
@@ -52,24 +57,16 @@ class XiaomiPushModule(
     }
 
     try {
-      val miPushClientClass = resolveMiPushClientClass()
-      if (miPushClientClass == null) {
-        promise.reject(
-          "ERR_XIAOMI_REGISTER",
-          "Xiaomi MiPush SDK AAR is missing from android/app/libs"
-        )
-        return
+      val pushConfiguration = PushConfiguration()
+      resolvePushChannelRegion(readMetaDataValue(REGION_META_DATA))?.let { region ->
+        pushConfiguration.setRegion(region)
       }
-
-      configureRegion(miPushClientClass, readMetaDataValue(REGION_META_DATA))
-      val registerMethod =
-        miPushClientClass.getMethod(
-          "registerPush",
-          android.content.Context::class.java,
-          String::class.java,
-          String::class.java
-        )
-      registerMethod.invoke(null, reactApplicationContext.applicationContext, appId, appKey)
+      MiPushClient.registerPush(
+        reactApplicationContext.applicationContext,
+        appId,
+        appKey,
+        pushConfiguration
+      )
       promise.resolve(null)
     } catch (error: Exception) {
       promise.reject("ERR_XIAOMI_REGISTER", error.message, error)
@@ -79,16 +76,8 @@ class XiaomiPushModule(
   @ReactMethod
   fun getRegId(promise: Promise) {
     try {
-      val miPushClientClass = resolveMiPushClientClass()
-      if (miPushClientClass == null) {
-        promise.resolve(null)
-        return
-      }
-
-      val getRegIdMethod =
-        miPushClientClass.getMethod("getRegId", android.content.Context::class.java)
-      val regId = getRegIdMethod.invoke(null, reactApplicationContext.applicationContext)
-      promise.resolve(regId?.toString())
+      val regId = MiPushClient.getRegId(reactApplicationContext.applicationContext)
+      promise.resolve(regId)
     } catch (error: Exception) {
       promise.reject("ERR_XIAOMI_REGID", error.message, error)
     }
@@ -97,16 +86,8 @@ class XiaomiPushModule(
   @ReactMethod
   fun getAppRegion(promise: Promise) {
     try {
-      val miPushClientClass = resolveMiPushClientClass()
-      if (miPushClientClass == null) {
-        promise.resolve(null)
-        return
-      }
-
-      val getAppRegionMethod =
-        miPushClientClass.getMethod("getAppRegion", android.content.Context::class.java)
-      val region = getAppRegionMethod.invoke(null, reactApplicationContext.applicationContext)
-      promise.resolve(region?.toString()?.trim()?.lowercase())
+      val region = MiPushClient.getAppRegion(reactApplicationContext.applicationContext)
+      promise.resolve(normalizeRegion(region))
     } catch (error: Exception) {
       promise.reject("ERR_XIAOMI_REGION", error.message, error)
     }
@@ -122,33 +103,24 @@ class XiaomiPushModule(
     return metaData.getString(key)?.trim()?.takeIf { it.isNotEmpty() }
   }
 
-  private fun resolveMiPushClientClass(): Class<*>? =
-    try {
-      Class.forName("com.xiaomi.mipush.sdk.MiPushClient")
-    } catch (_: ClassNotFoundException) {
-      null
+  private fun resolvePushChannelRegion(rawRegion: String?): PushChannelRegion =
+    when (normalizeRegion(rawRegion)) {
+      "china" -> PushChannelRegion.China
+      "global" -> PushChannelRegion.Global
+      "europe" -> PushChannelRegion.Europe
+      "russia" -> PushChannelRegion.Russia
+      "india" -> PushChannelRegion.India
+      else -> PushChannelRegion.China
     }
 
-  private fun configureRegion(miPushClientClass: Class<*>, rawRegion: String?) {
-    val normalizedRegion =
-      when (rawRegion?.trim()?.lowercase()) {
-        "europe" -> "Europe"
-        "russia" -> "Russia"
-        "india" -> "India"
-        else -> "Global"
-      }
-
-    val setRegionMethod =
-      miPushClientClass.methods.firstOrNull { method ->
-        method.name == "setRegion" && method.parameterTypes.size == 1
-      } ?: return
-    val enumClass = setRegionMethod.parameterTypes.firstOrNull() ?: return
-    val enumConstants = enumClass.enumConstants ?: return
-    val enumValue =
-      enumConstants.firstOrNull { constant ->
-        constant.toString().equals(normalizedRegion, ignoreCase = true)
-      } ?: return
-    setRegionMethod.invoke(null, enumValue)
+  private fun normalizeRegion(rawRegion: String?): String? {
+    val normalized = rawRegion?.trim()?.lowercase() ?: return null
+    return when (normalized) {
+      "mainland" -> "china"
+      "singapore" -> "global"
+      "china", "global", "europe", "russia", "india" -> normalized
+      else -> null
+    }
   }
 
   companion object {

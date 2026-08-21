@@ -1,11 +1,15 @@
 import { useMemo, useState } from "react";
-import { ScrollView, Switch, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { PressableRow } from "../../../hooks/usePressAnimation";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { BottomSheet, BottomSheetOptionList } from "../../../components/ui";
+import {
+  AppSwitch,
+  BottomSheet,
+  BottomSheetOptionList
+} from "../../../components/ui";
 import { useAppTheme } from "../../../styles/app-styles";
 import type { AppStackParamList } from "../../../types/navigation";
 import { AccountPageShell } from "../../account/AccountPageShell";
@@ -194,16 +198,9 @@ export function StorageDataOverviewScreen() {
                 {t("me.storage.autoSaveToAlbumDescription")}
               </Text>
             </View>
-            <Switch
+            <AppSwitch
               value={autoSaveToAlbum}
               onValueChange={updateAutoSaveToAlbum}
-              trackColor={{
-                false: theme.colors.surfaceMuted,
-                true: theme.colors.accentMuted
-              }}
-              thumbColor={
-                autoSaveToAlbum ? theme.colors.accent : theme.colors.textSoft
-              }
             />
           </PressableRow>
         </View>

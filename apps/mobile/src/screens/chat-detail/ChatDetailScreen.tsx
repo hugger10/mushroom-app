@@ -26,8 +26,8 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useCallback } from "react";
 import type { AppStackParamList } from "../../types/navigation";
 import { i18n } from "../../i18n";
-import chatDoodleDark from "../../assets/chat-doodle-dark.png";
-import chatDoodleLight from "../../assets/chat-doodle-light.png";
+import { useChatBackground } from "../../styles/chat-background-context";
+import { resolveChatBackground } from "../../styles/chat-backgrounds";
 import {
   ForwardPanel,
   GroupAnnouncementBanner,
@@ -224,6 +224,18 @@ export const ChatDetailScreen = memo(function ChatDetailScreen(
     };
   }, []);
   const androidBottomPadding = androidKeyboardHeight;
+  // iOS: KeyboardAvoidingView 把 onLayout 的 frame 视为相对父容器的坐标，
+  // 但键盘 frame 是窗口坐标。keyboardVerticalOffset 必须等于容器在窗口内的
+  // 顶部偏移（状态栏 + 头部高度），否则抬升量不足、输入框被键盘遮挡。
+  // 运行时用 measureInWindow 动态测量，头部高度变化（搜索模式/字体缩放）时
+  // 也能保持正确。
+  const chatMessagesRef = useRef<View | null>(null);
+  const [kavOffset, setKavOffset] = useState(0);
+  const handleChatMessagesLayout = useCallback(() => {
+    chatMessagesRef.current?.measureInWindow((_x, y) => {
+      setKavOffset(prev => (prev === y ? prev : y));
+    });
+  }, []);
   // 稳定回调引用：避免每次渲染创建新闭包，与下游 React.memo 配合。
   const onOpenReactionDetail = useCallback(
     (msg: Message) => sheetsRef.current?.openReactionDetail(msg),
@@ -270,8 +282,8 @@ export const ChatDetailScreen = memo(function ChatDetailScreen(
     props.activeMessages,
     props.currentUserId ?? null
   );
-  const chatBackgroundSource =
-    theme.mode === "dark" ? chatDoodleDark : chatDoodleLight;
+  const { chatBackgroundId } = useChatBackground();
+  const chatBackground = resolveChatBackground(chatBackgroundId, theme.mode);
   const activeConversationKey = props.activeConversation.client_conversation_id;
 
   // Date-separator + list data + searchActiveIds.
@@ -528,19 +540,27 @@ export const ChatDetailScreen = memo(function ChatDetailScreen(
         }
       />
 
-      <View style={styles.chatMessages}>
+      <View
+        ref={chatMessagesRef}
+        style={styles.chatMessages}
+        onLayout={handleChatMessagesLayout}
+      >
         <ImageBackground
-          source={chatBackgroundSource}
-          resizeMode="repeat"
+          source={chatBackground.source}
+          resizeMode={chatBackground.resizeMode}
           style={StyleSheet.absoluteFill}
           imageStyle={styles.chatMessagesBackgroundImage}
-        />
+        >
+          {chatBackground.darkOverlay ? (
+            <View style={styles.chatBackgroundOverlay} />
+          ) : null}
+        </ImageBackground>
 
         {Platform.OS === "ios" ? (
           <KeyboardAvoidingView
             style={styles.chatMessagesInner}
             behavior="padding"
-            keyboardVerticalOffset={0}
+            keyboardVerticalOffset={kavOffset}
           >
             {chatContent}
           </KeyboardAvoidingView>

@@ -1,4 +1,5 @@
 import { NativeEventEmitter, NativeModules, Platform } from "react-native";
+import { hashSeed } from "@mushroom/shared";
 import { deviceStorage } from "../data/storage";
 import { clearIncomingCallNotification } from "./notifications/calls";
 import type { MobileNotificationPayload } from "./notification-center";
@@ -126,6 +127,37 @@ function getCallKeep(): CallKeepModule | null {
     }
     return null;
   }
+}
+
+// Server `call_id` is a Snowflake ID (numeric string), but iOS CallKit only
+// accepts a valid UUID: `NSUUID initWithUUIDString:` returns nil for non-UUID
+// input, which crashes `reportNewIncomingCallWithUUID:` via a nil dictionary
+// entry (SIGABRT). Map the Snowflake id deterministically to a RFC 4122 UUID
+// so `displayIncomingCall` and `endCall` always address the same call.
+const CALLKEEP_UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function toCallKeepUUID(callId: string): string {
+  if (CALLKEEP_UUID_PATTERN.test(callId)) {
+    return callId;
+  }
+
+  const a = hashSeed(`${callId}:0`);
+  const b = hashSeed(`${callId}:1`);
+  const c = hashSeed(`${callId}:2`);
+  const d = hashSeed(`${callId}:3`);
+
+  const hex8 = (n: number) => n.toString(16).padStart(8, "0");
+  const hex4 = (n: number) => n.toString(16).padStart(4, "0");
+
+  // 8-4-4-4-12; third group version=4, fourth group variant=10 (RFC 4122).
+  const timeLow = hex8(a);
+  const timeMid = hex4(b & 0xffff);
+  const version = hex4((c & 0x0fff) | 0x4000);
+  const variant = hex4((d & 0x3fff) | 0x8000);
+  const node = hex8(c) + hex4(d >>> 16);
+
+  return `${timeLow}-${timeMid}-${version}-${variant}-${node}`;
 }
 
 function persistPendingSystemCallAction(action: PendingSystemCallAction) {
@@ -425,7 +457,7 @@ export async function reportIncomingSystemCall(
       const callerName =
         payload.conversationName || payload.title || payload.body || "Mushroom";
       await callKeep.displayIncomingCall?.(
-        payload.callId,
+        toCallKeepUUID(payload.callId),
         payload.conversationId || "mushroom",
         callerName,
         "generic",
@@ -478,7 +510,7 @@ export async function endSystemCall(callId: string) {
   reportedIncomingCallIds.delete(callId);
   clearSystemCallTimeout(callId);
   if (Platform.OS === "ios") {
-    await getCallKeep()?.endCall?.(callId);
+    await getCallKeep()?.endCall?.(toCallKeepUUID(callId));
   } else {
     // Android: tear down the self-managed ConnectionService call (if any) and
     // clear the full-screen incoming-call notification.

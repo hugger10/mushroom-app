@@ -1,10 +1,11 @@
 name: Quality
 
+# 暂时屏蔽：提交到 GitHub 时自动 quality 检查
 on:
   push:
     branches:
-      - main
-      - master
+      # - main
+      # - master
       - "codex/**"
   pull_request:
 

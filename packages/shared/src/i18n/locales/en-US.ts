@@ -1195,6 +1195,7 @@ const translation: TranslationSchema = {
     myProfile: "My Profile",
     notifications: "Notifications",
     darkMode: "Dark Mode",
+    chatBackground: "Chat Background",
     accountSecurity: "Account Security",
     storageData: "Storage and Data",
     helpFeedback: "Help & Feedback",
@@ -1222,6 +1223,19 @@ const translation: TranslationSchema = {
     themeOptionDarkDescription: "More comfortable in low-light environments",
     languageOptionChineseDescription: "Simplified Chinese interface",
     languageOptionEnglishDescription: "English interface",
+    chatBackgroundPage: {
+      title: "Chat Background",
+      preview: "Preview",
+      choose: "Choose Background",
+      presets: {
+        doodle: "Default Doodle",
+        mint: "Mint",
+        ocean: "Ocean",
+        sunset: "Sunset",
+        lavender: "Lavender",
+        midnight: "Midnight"
+      }
+    },
     birthday: "Birthday",
     birthdayUnset: "Not set",
     profile: {

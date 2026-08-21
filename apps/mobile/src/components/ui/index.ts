@@ -1,4 +1,5 @@
 export { AppAvatar } from "./AppAvatar";
+export { AppSwitch } from "./AppSwitch";
 export { AppErrorBoundary } from "./AppErrorBoundary";
 export {
   BottomSheet,

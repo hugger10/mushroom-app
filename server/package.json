@@ -28,7 +28,8 @@
     "loadtest:ws:group": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child tools/load-test/seed-group-ws.ts",
     "loadtest:cleanup": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child tools/load-test/cleanup.ts",
     "loadtest:bulk": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child tools/load-test/seed-bulk-users.ts",
-    "loadtest:cleanup:bulk": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child tools/load-test/cleanup-bulk.ts"
+    "loadtest:cleanup:bulk": "cross-env NODE_ENV=development ts-node-dev --transpile-only --exit-child tools/load-test/cleanup-bulk.ts",
+    "tool:xiaomi:build": "node tools/xiaomi/build.mjs"
   },
   "dependencies": {
     "@akashrajpurohit/snowflake-id": "^2.0.0",

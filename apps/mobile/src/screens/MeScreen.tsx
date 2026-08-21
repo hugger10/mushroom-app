@@ -148,6 +148,10 @@ export function MeScreen(props: {
     navigation.navigate("NotificationSettings");
   }
 
+  function openChatBackgroundPage() {
+    navigation.navigate("ChatBackground");
+  }
+
   function openProfileEditor() {
     navigation.navigate("MyProfile");
   }
@@ -322,6 +326,37 @@ export function MeScreen(props: {
                 color={theme.colors.textSoft}
               />
             </View>
+          </PressableRow>
+          <View style={styles.meScreenSeparator} />
+          <PressableRow
+            style={styles.meScreenMenuItem}
+            onPress={openChatBackgroundPage}
+            testID="me-chat-background-trigger"
+          >
+            <View style={styles.meScreenMenuLeft}>
+              <View
+                style={[
+                  styles.meScreenMenuIconWrapper,
+                  styles.meScreenMenuIconChip,
+                  {
+                    backgroundColor:
+                      theme.mode === "dark"
+                        ? "rgba(63, 182, 255, 0.2)"
+                        : "#E8F6FF"
+                  }
+                ]}
+              >
+                <Icon name="image-outline" size={19} color="#3FB6FF" />
+              </View>
+              <Text style={styles.meScreenMenuTitle} numberOfLines={1}>
+                {t("me.chatBackground")}
+              </Text>
+            </View>
+            <Icon
+              name="chevron-forward"
+              size={18}
+              color={theme.colors.textSoft}
+            />
           </PressableRow>
           <View style={styles.meScreenSeparator} />
           <PressableRow

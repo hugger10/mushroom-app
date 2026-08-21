@@ -27,6 +27,7 @@ export type AppStackParamList = {
   GroupInfoPermissionChoice: { field: GroupInfoPermissionField };
   GroupInfoInvite: undefined;
   NotificationSettings: undefined;
+  ChatBackground: undefined;
   MyProfile: undefined;
   MyProfileFieldEdit: { field: TextProfileField };
   MyProfileGenderEdit: undefined;

@@ -21,7 +21,7 @@
 ### 1.2 非目标
 
 - **不实现** 跨设备主题同步（无 server 列、无 API）。
-- **不实现** 每会话/每群自定义主题或壁纸（WhatsApp/Telegram parity gap）。
+- **不实现** 每会话/每群自定义主题或壁纸（全局聊天背景已实现，见 `chat-backgrounds.ts`；每会话覆盖仍未实现）。
 - **不实现** 第三方组件库（无 nativewind / paper / styled-components / restyle）。
 - **不实现** OS Chrome 主题联动（Electron 未设 `nativeTheme.themeSource`、未设 `BrowserWindow.backgroundColor`、Android 未设 NavigationBar 颜色）。
 
@@ -132,12 +132,15 @@ flowchart LR
 
 ### 5.4 Mobile
 
-| 模块           | 路径                                              |
-| -------------- | ------------------------------------------------- |
-| Token 表       | `apps/mobile/src/styles/theme.ts:1-150`           |
-| Provider       | `apps/mobile/src/styles/app-styles.tsx:74-125`    |
-| StatusBar 切换 | `apps/mobile/src/App.tsx:146-150`                 |
-| 设置入口       | `apps/mobile/src/screens/MeScreen.tsx:44-57, 450` |
+| 模块              | 路径                                                                      |
+| ----------------- | ------------------------------------------------------------------------- |
+| Token 表          | `apps/mobile/src/styles/theme.ts:1-150`                                   |
+| Provider          | `apps/mobile/src/styles/app-styles.tsx:74-125`                            |
+| StatusBar 切换    | `apps/mobile/src/App.tsx:146-150`                                         |
+| 设置入口          | `apps/mobile/src/screens/MeScreen.tsx:44-57, 450`                         |
+| 聊天背景预设      | `apps/mobile/src/styles/chat-backgrounds.ts:1-160`                        |
+| 聊天背景 Provider | `apps/mobile/src/styles/chat-background-context.tsx:1-70`                 |
+| 聊天背景选择页    | `apps/mobile/src/features/account/screens/ChatBackgroundScreen.tsx:1-160` |
 
 ---
 
@@ -177,6 +180,7 @@ flowchart LR
   - Electron：electron-store `preferred-theme`
   - Web 浏览器：localStorage `mushroom.web.theme`（**当前写路径缺失**）
   - Mobile：MMKV `mushroom.mobile.theme`
+  - Mobile 聊天背景：MMKV `mushroom.mobile.chat-background`（设备级，仅内置预设，无自定义图片）
 
 ---
 
@@ -195,20 +199,20 @@ flowchart LR
 
 ## 11. 现状缺口与 Roadmap
 
-| ID  | 现状                                                            | 风险                        | 建议                                                                |
-| --- | --------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------- |
-| R1  | web 浏览器纯模式不写 localStorage                               | 刷新偏好丢失                | 在 `setPreference` 路径追加 `localStorage.setItem`/`removeItem`     |
-| R2  | Electron 不设 `nativeTheme.themeSource`                         | OS chrome 与 app 主题不一致 | 主题切换时 `nativeTheme.themeSource = preference`                   |
-| R3  | Electron BrowserWindow 无 backgroundColor                       | dark 冷启动白闪             | 启动时基于持久化偏好预设 backgroundColor                            |
-| R4  | mobile Android 未设 NavigationBar 颜色                          | 底栏与背景割裂              | `react-native-system-navigation-bar` 或自写原生模块                 |
-| R5  | web/mobile token 双份重复且漂移                                 | 视觉一致性差                | 抽 design token JSON，构建期生成 CSS vars + TS 对象                 |
-| R6  | 无跨设备同步                                                    | 多端不一致                  | `users.theme_preference` 列 + `/auth/me/theme`                      |
-| R7  | 无 wallpaper / 会话级主题                                       | 与同类 IM 差距明显          | 设计 `conversation_settings.wallpaper`、客户端缓存                  |
-| R8  | AntD `colorPrimary` 硬编码                                      | 品牌色切换重                | 提到 `packages/shared/src/theme.ts` 单点                            |
-| R9  | 无 contrast / a11y 校验                                         | 暗色对比度未量化            | 引入 lint 工具或快照                                                |
-| R10 | 无暗色 logo/splash 变体                                         | 体验粗糙                    | 双套 asset + 按 `prefers-color-scheme` 选                           |
-| R11 | iOS Statusbar barStyle 切换正常，但 SafeArea bg 仍可能 mismatch | 边角颜色错位                | `SafeAreaView style={{ backgroundColor: theme.colors.background }}` |
-| R12 | 没有主题切换动画                                                | 切换闪烁                    | 加 `transition: background 200ms` 到全局元素                        |
+| ID  | 现状                                                            | 风险                        | 建议                                                                                                                      |
+| --- | --------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| R1  | web 浏览器纯模式不写 localStorage                               | 刷新偏好丢失                | 在 `setPreference` 路径追加 `localStorage.setItem`/`removeItem`                                                           |
+| R2  | Electron 不设 `nativeTheme.themeSource`                         | OS chrome 与 app 主题不一致 | 主题切换时 `nativeTheme.themeSource = preference`                                                                         |
+| R3  | Electron BrowserWindow 无 backgroundColor                       | dark 冷启动白闪             | 启动时基于持久化偏好预设 backgroundColor                                                                                  |
+| R4  | mobile Android 未设 NavigationBar 颜色                          | 底栏与背景割裂              | `react-native-system-navigation-bar` 或自写原生模块                                                                       |
+| R5  | web/mobile token 双份重复且漂移                                 | 视觉一致性差                | 抽 design token JSON，构建期生成 CSS vars + TS 对象                                                                       |
+| R6  | 无跨设备同步                                                    | 多端不一致                  | `users.theme_preference` 列 + `/auth/me/theme`                                                                            |
+| R7  | 无 wallpaper / 会话级主题                                       | 与同类 IM 差距明显          | 全局聊天背景已实现（Mobile，内置预设 + 深色遮罩）；会话级覆盖留待后续，设计 `conversation_settings.wallpaper`、客户端缓存 |
+| R8  | AntD `colorPrimary` 硬编码                                      | 品牌色切换重                | 提到 `packages/shared/src/theme.ts` 单点                                                                                  |
+| R9  | 无 contrast / a11y 校验                                         | 暗色对比度未量化            | 引入 lint 工具或快照                                                                                                      |
+| R10 | 无暗色 logo/splash 变体                                         | 体验粗糙                    | 双套 asset + 按 `prefers-color-scheme` 选                                                                                 |
+| R11 | iOS Statusbar barStyle 切换正常，但 SafeArea bg 仍可能 mismatch | 边角颜色错位                | `SafeAreaView style={{ backgroundColor: theme.colors.background }}`                                                       |
+| R12 | 没有主题切换动画                                                | 切换闪烁                    | 加 `transition: background 200ms` 到全局元素                                                                              |
 
 优先级：R1/R2/R3（启动正确）→ R5/R8（一致性）→ R4/R11（移动端体验）→ R6/R7（跨设备 + 个性化）→ R9/R10/R12。
 
@@ -216,6 +220,7 @@ flowchart LR
 
 ## 12. Changelog
 
-| 日期       | 版本 | 变更                                             | 作者     |
-| ---------- | ---- | ------------------------------------------------ | -------- |
-| 2026-05-23 | v1.0 | 首版：三态偏好、CSS vars、RN 样式工厂、12 项缺口 | OpenCode |
+| 日期       | 版本 | 变更                                                | 作者     |
+| ---------- | ---- | --------------------------------------------------- | -------- |
+| 2026-08-21 | v1.1 | 新增 Mobile 全局聊天背景偏好（内置预设 + 深色遮罩） | OpenCode |
+| 2026-05-23 | v1.0 | 首版：三态偏好、CSS vars、RN 样式工厂、12 项缺口    | OpenCode |

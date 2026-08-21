@@ -152,7 +152,8 @@
 
 - 小米 Java Http2 Server SDK 下载包
 - 解压后的 `jar` 目录
-- 编译 `server/tools/xiaomi/XiaomiPushCli.java` 后的 classes 目录
+- 编译 `server/tools/xiaomi/XiaomiPushCli.java` 后的 classes 目录（用
+  `pnpm --filter @mushroom/server tool:xiaomi:build` 一键编译）
 
 推荐路径：
 
@@ -290,7 +291,7 @@ VoIP 来电由服务端 `ApnsVoipPushProvider`（HTTP/2 + `.p8` ES256 JWT，
 4. 填完服务端 `.env` 中的 `PUSH_FCM_*`
 5. 填完服务端 `.env` 中的 `PUSH_HUAWEI_*`
 6. 填完服务端 `.env` 中的 `PUSH_XIAOMI_*`
-7. 编译 `server/tools/xiaomi/XiaomiPushCli.java`
+7. 运行 `pnpm --filter @mushroom/server tool:xiaomi:build` 编译 Xiaomi helper
 8. 启动服务端并关闭 `PUSH_DRY_RUN`
 
 ### iOS

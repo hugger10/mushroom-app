@@ -108,5 +108,35 @@
           <action android:name="com.xiaomi.mipush.ERROR" />
         </intent-filter>
       </receiver>
+
+      <!--
+       MiPush SDK 内部服务。AAR（MiPush_SDK_Client_7_9_2-C_3rd.aar）只声明了 service
+       本身、没有 intent-filter，而小米系统正是靠 `com.xiaomi.mipush.MESSAGING_EVENT`
+       这个 action 启动 MessageHandleService 把消息投递给 App SDK。缺失时系统投递失败
+       （日志：`Unable to start service ... com.xiaomi.mipush.MESSAGING_EVENT ... not found`），
+       App 端 SDK 拿不到消息，onNotificationMessageClicked 等回调永远不触发。这里补上
+       intent-filter（manifest 合并会合并进 AAR 的同名 service）。
+      -->
+      <service
+        android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+        android:enabled="true"
+        android:exported="true"
+        android:permission="com.xiaomi.xmsf.permission.MIPUSH_RECEIVE">
+        <intent-filter>
+          <action android:name="com.xiaomi.mipush.MESSAGING_EVENT" />
+        </intent-filter>
+      </service>
+
+      <service
+        android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+        android:enabled="true"
+        android:exported="true"
+        android:permission="com.xiaomi.xmsf.permission.MIPUSH_RECEIVE">
+        <intent-filter>
+          <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+          <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+          <action android:name="com.xiaomi.mipush.ERROR" />
+        </intent-filter>
+      </service>
     </application>
 </manifest>

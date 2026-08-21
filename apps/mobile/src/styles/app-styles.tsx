@@ -22,6 +22,7 @@ import { deviceStorage } from "../data/storage";
 import { listAccountStyles } from "./list-account-styles";
 import { overlayStyles } from "./overlay-styles";
 import { getTheme } from "./theme";
+import { chatBackgroundStyles } from "./chat-background-styles";
 
 const lightTheme = getTheme("light");
 const darkTheme = getTheme("dark");
@@ -30,14 +31,16 @@ const lightStyles = StyleSheet.create({
   ...baseStyles(lightTheme),
   ...listAccountStyles(lightTheme),
   ...chatStyles(lightTheme),
-  ...overlayStyles(lightTheme)
+  ...overlayStyles(lightTheme),
+  ...chatBackgroundStyles(lightTheme)
 });
 
 const darkStyles = StyleSheet.create({
   ...baseStyles(darkTheme),
   ...listAccountStyles(darkTheme),
   ...chatStyles(darkTheme),
-  ...overlayStyles(darkTheme)
+  ...overlayStyles(darkTheme),
+  ...chatBackgroundStyles(darkTheme)
 });
 
 const THEME_STORAGE_KEY = "mushroom.mobile.theme";

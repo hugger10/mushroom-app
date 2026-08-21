@@ -1148,6 +1148,7 @@ const translation = {
     myProfile: "我的资料",
     notifications: "消息通知",
     darkMode: "深色模式",
+    chatBackground: "聊天背景",
     accountSecurity: "账号安全",
     storageData: "存储和数据",
     helpFeedback: "帮助与反馈",
@@ -1174,6 +1175,19 @@ const translation = {
     themeOptionDarkDescription: "在低照度环境下更舒适",
     languageOptionChineseDescription: "简体中文界面",
     languageOptionEnglishDescription: "English interface",
+    chatBackgroundPage: {
+      title: "聊天背景",
+      preview: "预览",
+      choose: "选择背景",
+      presets: {
+        doodle: "默认涂鸦",
+        mint: "清新绿",
+        ocean: "静谧蓝",
+        sunset: "暖阳橙",
+        lavender: "薰衣草紫",
+        midnight: "深空"
+      }
+    },
     birthday: "生日",
     birthdayUnset: "未设置",
     profile: {

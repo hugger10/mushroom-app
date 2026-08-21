@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { CHAT_BACKGROUND_DARK_OVERLAY } from "./chat-backgrounds";
 import type { AppTheme } from "./theme";
 
 export function chatStyles(theme: AppTheme) {
@@ -224,6 +225,14 @@ export function chatStyles(theme: AppTheme) {
     },
     chatMessagesBackgroundImage: {
       opacity: 1
+    },
+    chatBackgroundOverlay: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      backgroundColor: CHAT_BACKGROUND_DARK_OVERLAY
     },
     chatMessagesScroll: {
       flex: 1

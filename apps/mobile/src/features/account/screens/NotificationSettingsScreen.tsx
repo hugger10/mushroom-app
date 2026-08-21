@@ -4,7 +4,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  Switch,
   Text,
   TouchableOpacity,
   View
@@ -41,7 +40,11 @@ import {
   type TonePickerOption
 } from "../../../platform/alert-tones/tone-manager";
 import { useAppTheme } from "../../../styles/app-styles";
-import { BottomSheet, BottomSheetOptionList } from "../../../components/ui";
+import {
+  AppSwitch,
+  BottomSheet,
+  BottomSheetOptionList
+} from "../../../components/ui";
 import type { AppStackParamList } from "../../../types/navigation";
 import { AccountPageShell } from "../AccountPageShell";
 import { useMeProps } from "../MeContext";
@@ -82,7 +85,7 @@ function SettingSwitchRow(props: {
   testID: string;
   disabled?: boolean;
 }) {
-  const { styles, theme } = useAppTheme();
+  const { styles } = useAppTheme();
   const disabled = props.disabled === true;
   const { animatedStyle, handlePressIn, handlePressOut } = usePressAnimation();
 
@@ -107,15 +110,10 @@ function SettingSwitchRow(props: {
           {props.title}
         </Text>
       </View>
-      <Switch
+      <AppSwitch
         value={props.value}
         onValueChange={props.onValueChange}
         disabled={disabled}
-        trackColor={{
-          false: theme.colors.surfaceMuted,
-          true: theme.colors.accentMuted
-        }}
-        thumbColor={props.value ? theme.colors.accent : theme.colors.textSoft}
         testID={props.testID}
       />
     </AnimatedPressable>

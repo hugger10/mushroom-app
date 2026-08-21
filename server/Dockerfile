@@ -24,6 +24,11 @@ RUN pnpm --filter @mushroom/server build
 FROM base AS runner
 ENV NODE_ENV=production
 
+# 阿里云国内源加速 apk + 安装小米推送 helper 依赖的 Java JRE
+# （openjdk17-jre 为 Alpine/musl 版，与 node:22-alpine 兼容）
+RUN sed -i 's#dl-cdn.alpinelinux.org#mirrors.aliyun.com#g' /etc/apk/repositories \
+    && apk add --no-cache openjdk17-jre
+
 # Workspace metadata needed by pnpm deploy
 COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 COPY patches/ ./patches/
